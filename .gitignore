@@ -1,0 +1,16 @@
+node_modules/
+*.log
+.DS_Store
+.env
+.env.local
+*.tmp
+*.temp
+.install-version
+.claude/settings.local.json
+plugin/data/
+plugin/data.backup/
+package-lock.json
+private/
+
+# Generated UI files (built from viewer-template.html)
+src/ui/viewer.html

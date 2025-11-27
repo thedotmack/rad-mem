@@ -1,0 +1,273 @@
+---
+title: "Plugin Hooks"
+description: "6 lifecycle hooks that power Claude-Mem"
+---
+
+# Plugin Hooks
+
+Claude-Mem integrates with Claude Code through 6 hook scripts across 5 lifecycle events that capture events and inject context. Additionally, a smart-install pre-hook script manages dependencies.
+
+## Hook Overview
+
+| Hook Type           | Purpose                              | Timeout | Script                  |
+|---------------------|--------------------------------------|---------|-------------------------|
+| Pre-Hook            | Smart dependency installation        | 300s    | smart-install.js*       |
+| SessionStart        | Inject context from previous sessions| 300s    | context-hook.js         |
+| SessionStart        | Display first-time setup message     | 10s     | user-message-hook.js    |
+| UserPromptSubmit    | Create/track new sessions            | 120s    | new-hook.js             |
+| PostToolUse         | Capture tool execution observations  | 120s    | save-hook.js            |
+| Stop                | Generate session summaries           | 120s    | summary-hook.js         |
+| SessionEnd          | Mark sessions complete               | 120s    | cleanup-hook.js         |
+
+*smart-install.js is a pre-hook script (not a lifecycle hook). It's called before context-hook via command chaining in hooks.json.
+
+## Hook Configuration
+
+Hooks are configured in `plugin/hooks/hooks.json`:
+
+```json
+{
+  "description": "Claude-mem memory system hooks",
+  "hooks": {
+    "SessionStart": [{
+      "matcher": "startup|clear|compact",
+      "hooks": [{
+        "type": "command",
+        "command": "node \"${CLAUDE_PLUGIN_ROOT}/../scripts/smart-install.js\" && node ${CLAUDE_PLUGIN_ROOT}/scripts/context-hook.js",
+        "timeout": 300
+      }, {
+        "type": "command",
+        "command": "node ${CLAUDE_PLUGIN_ROOT}/scripts/user-message-hook.js",
+        "timeout": 10
+      }]
+    }],
+    "UserPromptSubmit": [{
+      "hooks": [{
+        "type": "command",
+        "command": "node ${CLAUDE_PLUGIN_ROOT}/scripts/new-hook.js",
+        "timeout": 120
+      }]
+    }],
+    "PostToolUse": [{
+      "matcher": "*",
+      "hooks": [{
+        "type": "command",
+        "command": "node ${CLAUDE_PLUGIN_ROOT}/scripts/save-hook.js",
+        "timeout": 120
+      }]
+    }],
+    "Stop": [{
+      "hooks": [{
+        "type": "command",
+        "command": "node ${CLAUDE_PLUGIN_ROOT}/scripts/summary-hook.js",
+        "timeout": 120
+      }]
+    }],
+    "SessionEnd": [{
+      "hooks": [{
+        "type": "command",
+        "command": "node ${CLAUDE_PLUGIN_ROOT}/scripts/cleanup-hook.js",
+        "timeout": 120
+      }]
+    }]
+  }
+}
+```
+
+## 1. Pre-Hook Script - Smart Install (`smart-install.js`)
+
+**Purpose**: Intelligently manage dependencies and ensure worker service is running.
+
+**Note**: This is NOT a lifecycle hook - it's a pre-hook script executed via command chaining before context-hook.js runs.
+
+**Behavior**:
+- Checks if dependencies need installation using version marker (`.install-version`)
+- Only runs npm install when:
+  - First-time installation (no node_modules)
+  - Version changed in package.json
+  - Critical dependency missing (e.g., better-sqlite3)
+- Provides Windows-specific error messages for build tool issues
+- Auto-starts PM2 worker service after installation
+- Fast when already installed (~10ms vs 2-5 seconds)
+
+**Input** (via stdin):
+```json
+{
+  "session_id": "claude-session-123",
+  "cwd": "/path/to/project",
+  "source": "startup"
+}
+```
+
+**Implementation**: `scripts/smart-install.js` (standalone script, not in src/hooks/)
+
+**Key Features**:
+- Version caching prevents redundant installs
+- Cross-platform compatible (Windows, macOS, Linux)
+- Helpful error messages with troubleshooting steps
+- Non-blocking worker startup
+
+**v5.0.3 Enhancement**: Smart caching eliminates 2-5 second npm install on every SessionStart, reducing to ~10ms for already-installed dependencies.
+
+## 2. SessionStart Hook - Context Injection (`context-hook.js`)
+
+**Purpose**: Inject context from previous sessions into Claude's initial context.
+
+**Behavior**:
+- Retrieves last 10 session summaries with three-tier verbosity (v4.2.0)
+- Retrieves last 50 observations (configurable via `CLAUDE_MEM_CONTEXT_OBSERVATIONS`)
+- Returns context via `hookSpecificOutput` in JSON format (fixed in v4.1.0)
+- Formats results as progressive disclosure index
+
+**Input** (via stdin):
+```json
+{
+  "session_id": "claude-session-123",
+  "cwd": "/path/to/project",
+  "source": "startup"
+}
+```
+
+**Output** (via stdout):
+```json
+{
+  "hookSpecificOutput": "# Recent Sessions\n\n## Session 1...\n"
+}
+```
+
+**Implementation**: `src/hooks/context-hook.ts`
+
+## 3. SessionStart Hook - User Message (`user-message-hook.js`)
+
+**Purpose**: Display helpful user messages during first-time setup or when viewing context.
+
+**Behavior**:
+- Shows first-time setup message when node_modules is missing
+- Displays formatted context information with colors
+- Provides tips for using claude-mem effectively
+- Shows link to web viewer UI (http://localhost:37777)
+- Exits with code 3 (informational, not error)
+
+**Output Example**:
+```
+📝 Claude-Mem Context Loaded
+   ℹ️  Note: This appears as stderr but is informational only
+
+[Context details...]
+
+📺 Watch live in browser http://localhost:37777/ (New! v5.1)
+```
+
+**Implementation**: `plugin/scripts/user-message-hook.js` (minified)
+
+**Key Features**:
+- User-friendly first-time setup experience
+- Visual context display with colors
+- Links to new features (viewer UI)
+- Non-intrusive messaging
+
+## 4. UserPromptSubmit Hook (`new-hook.js`)
+
+**Purpose**: Create new session records and initialize session tracking.
+
+**Behavior**:
+- Creates new session in database
+- Initializes session tracking
+- Saves raw user prompts for full-text search (as of v4.2.0)
+- Sends init signal to worker service
+
+**Input** (via stdin):
+```json
+{
+  "session_id": "claude-session-123",
+  "cwd": "/path/to/project",
+  "prompt": "User's actual prompt text"
+}
+```
+
+**Implementation**: `src/hooks/new-hook.ts`
+
+## 5. PostToolUse Hook (`save-hook.js`)
+
+**Purpose**: Capture tool execution observations.
+
+**Behavior**:
+- Fires after EVERY tool execution (Read, Write, Edit, Bash, etc.)
+- Sends observations to worker service for processing
+- Includes correlation IDs for tracing
+- Filters low-value observations
+
+**Input** (via stdin):
+```json
+{
+  "session_id": "claude-session-123",
+  "cwd": "/path/to/project",
+  "tool_name": "Read",
+  "tool_input": {...},
+  "tool_result": "...",
+  "correlation_id": "abc-123"
+}
+```
+
+**Implementation**: `src/hooks/save-hook.ts`
+
+## 6. Stop Hook (`summary-hook.js`)
+
+**Purpose**: Generate session summaries when Claude stops.
+
+**Behavior**:
+- Triggers final summary generation
+- Sends summarize request to worker service
+- Summary includes: request, completed, learned, next_steps
+
+**Input** (via stdin):
+```json
+{
+  "session_id": "claude-session-123",
+  "cwd": "/path/to/project",
+  "source": "user_stop"
+}
+```
+
+**Implementation**: `src/hooks/summary-hook.ts`
+
+## 7. SessionEnd Hook (`cleanup-hook.js`)
+
+**Purpose**: Mark sessions as completed (graceful cleanup as of v4.1.0).
+
+**Behavior**:
+- Marks sessions as completed
+- Skips cleanup on `/clear` commands to preserve ongoing sessions
+- Allows workers to finish pending operations naturally
+- Previously sent DELETE requests; now uses graceful completion
+
+**Input** (via stdin):
+```json
+{
+  "session_id": "claude-session-123",
+  "cwd": "/path/to/project",
+  "source": "normal"
+}
+```
+
+**Implementation**: `src/hooks/cleanup-hook.ts`
+
+## Hook Development
+
+### Adding a New Hook
+
+1. Create hook implementation in `src/hooks/your-hook.ts`
+2. Add to `plugin/hooks/hooks.json`
+3. Rebuild with `npm run build`
+
+### Hook Best Practices
+
+- **Fast execution**: Hooks should complete quickly (< 1s ideal)
+- **Graceful degradation**: Don't block Claude if worker is down
+- **Structured logging**: Use logger for debugging
+- **Error handling**: Catch and log errors, don't crash
+- **JSON output**: Use `hookSpecificOutput` for context injection
+
+## Troubleshooting
+
+See [Troubleshooting - Hook Issues](../troubleshooting.md#hook-issues) for common problems and solutions.
