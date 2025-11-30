@@ -9,7 +9,7 @@ interface ObservationCardProps {
 // Helper to strip project root from file paths
 function stripProjectRoot(filePath: string): string {
   // Try to extract relative path by finding common project markers
-  const markers = ['/Scripts/', '/src/', '/plugin/', '/docs/'];
+  const markers = ['/Scripts/', '/src/', '/dist/', '/docs/'];
 
   for (const marker of markers) {
     const index = filePath.indexOf(marker);

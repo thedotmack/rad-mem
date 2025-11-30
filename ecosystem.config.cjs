@@ -13,16 +13,16 @@ module.exports = {
   apps: [
     {
       name: 'rad-mem-worker',
-      script: './plugin/scripts/worker-service.cjs',
-      watch: true,
-      ignore_watch: [
-        'node_modules',
-        'logs',
-        '*.log',
-        '*.db',
-        '*.db-*',
-        '.git'
-      ]
+      script: './dist/server/worker-service.cjs'
+      // , watch: true,
+      // ignore_watch: [
+      //   'node_modules',
+      //   'logs',
+      //   '*.log',
+      //   '*.db',
+      //   '*.db-*',
+      //   '.git'
+      // ]
     }
   ]
 };

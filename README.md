@@ -328,7 +328,7 @@ See [Configuration Guide](https://docs.rad-mem.ai/configuration) for details.
 git clone https://github.com/thedotmack/rad-mem.git
 cd rad-mem
 npm install
-npm run build
+npm run build  # Outputs to dist/server/ and dist/ui/
 
 # Run tests
 npm test
@@ -339,6 +339,10 @@ npm run worker:start
 # View logs
 npm run worker:logs
 ```
+
+**Build Output**:
+- `dist/server/` - Compiled worker service and search server
+- `dist/ui/` - React viewer app bundle
 
 See [Development Guide](https://docs.rad-mem.ai/development) for detailed instructions.
 

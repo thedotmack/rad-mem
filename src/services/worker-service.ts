@@ -114,7 +114,7 @@ export class WorkerService {
 
     // Serve static files for web UI (viewer-bundle.js, logos, fonts, etc.)
     const packageRoot = getPackageRoot();
-    const uiDir = path.join(packageRoot, 'plugin', 'ui');
+    const uiDir = path.join(packageRoot, 'dist', 'ui');
     this.app.use(express.static(uiDir));
   }
 

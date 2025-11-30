@@ -9,6 +9,7 @@ node_modules/
 .claude/settings.local.json
 plugin/data/
 plugin/data.backup/
+dist/
 package-lock.json
 private/
 

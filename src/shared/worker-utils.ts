@@ -37,7 +37,7 @@ async function isWorkerHealthy(): Promise<boolean> {
  */
 async function startWorker(): Promise<boolean> {
   try {
-    // Find the ecosystem config file (built version in plugin/)
+    // Find the ecosystem config file
     const pluginRoot = getPackageRoot();
     const ecosystemPath = path.join(pluginRoot, 'ecosystem.config.cjs');
 

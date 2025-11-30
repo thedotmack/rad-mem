@@ -26,7 +26,7 @@
     "node": ">=18.0.0"
   },
   "scripts": {
-    "build": "node scripts/build-hooks.js",
+    "build": "node scripts/build-server.js",
     "test": "node --test tests/",
     "worker:start": "pm2 start ecosystem.config.cjs",
     "worker:stop": "pm2 stop rad-mem-worker",

@@ -98,7 +98,7 @@ export function getCurrentProjectName(): string {
 /**
  * Find package root directory
  *
- * Works because bundled hooks are in plugin/scripts/,
+ * Works because bundled server files are in dist/server/,
  * so package root is always two levels up
  */
 export function getPackageRoot(): string {

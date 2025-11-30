@@ -21,10 +21,14 @@ rad-mem is a **RAD Protocol server** - a platform-agnostic memory system for AI 
 ## Build Commands
 
 ```bash
-npm run build           # Compile TypeScript
+npm run build           # Compile TypeScript to dist/
 npm run worker:restart  # Restart PM2 worker (rad-mem-worker)
 npm run worker:logs     # View worker logs
 ```
+
+**Build Output**:
+- `dist/server/` - Compiled worker service and search server
+- `dist/ui/` - React viewer app bundle
 
 ## Environment Variables
 
