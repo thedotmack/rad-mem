@@ -374,7 +374,7 @@ async function contextHook(input?: SessionStartInput, useColors: boolean = false
           // Render summary
           const summary = item.data;
           const summaryTitle = `${summary.request || 'Session started'} (${formatDateTime(summary.displayTime)})`;
-          const link = summary.shouldShowLink ? `claude-mem://session-summary/${summary.id}` : '';
+          const link = summary.shouldShowLink ? `rad-mem://session-summary/${summary.id}` : '';
 
           if (useColors) {
             const linkPart = link ? `${colors.dim}[${link}]${colors.reset}` : '';
@@ -514,9 +514,9 @@ async function contextHook(input?: SessionStartInput, useColors: boolean = false
       const workTokensK = Math.round(totalDiscoveryTokens / 1000);
       output.push('');
       if (useColors) {
-        output.push(`${colors.dim}💰 Access ${workTokensK}k tokens of past research & decisions for just ${totalReadTokens.toLocaleString()}t. Use claude-mem search to access memories by ID instead of re-reading files.${colors.reset}`);
+        output.push(`${colors.dim}💰 Access ${workTokensK}k tokens of past research & decisions for just ${totalReadTokens.toLocaleString()}t. Use rad-mem search to access memories by ID instead of re-reading files.${colors.reset}`);
       } else {
-        output.push(`💰 Access ${workTokensK}k tokens of past research & decisions for just ${totalReadTokens.toLocaleString()}t. Use claude-mem search to access memories by ID instead of re-reading files.`);
+        output.push(`💰 Access ${workTokensK}k tokens of past research & decisions for just ${totalReadTokens.toLocaleString()}t. Use rad-mem search to access memories by ID instead of re-reading files.`);
       }
     }
   }

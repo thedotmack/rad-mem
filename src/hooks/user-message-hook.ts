@@ -24,7 +24,7 @@ if (!existsSync(nodeModulesPath)) {
    user messages in Claude Code UI until a better method is provided.
 ---
 
-⚠️  Claude-Mem: First-Time Setup
+⚠️  Rad-Mem: First-Time Setup
 
 Dependencies have been installed in the background. This only happens once.
 
@@ -33,7 +33,7 @@ Dependencies have been installed in the background. This only happens once.
    • Use /init to write or update your CLAUDE.md for better project context
    • Try /clear after one session to see what context looks like
 
-Thank you for installing Claude-Mem!
+Thank you for installing Rad-Mem!
 
 This message was not added to your startup context, so you can continue working as normal.
 `);
@@ -49,10 +49,10 @@ try {
 
   const port = getWorkerPort();
   console.error(
-    "\n\n📝 Claude-Mem Context Loaded\n" +
+    "\n\n📝 Rad-Mem Context Loaded\n" +
     "   ℹ️  Note: This appears as stderr but is informational only\n\n" +
     output +
-    "\n\n💬 Feedback & Support\nhttps://github.com/thedotmack/claude-mem/discussions/110\n" +
+    "\n\n💬 Feedback & Support\nhttps://github.com/thedotmack/rad-mem/discussions/110\n" +
     `\n📺 Watch live in browser http://localhost:${port}/\n`
   );
 

@@ -1,17 +1,13 @@
 {
-  "name": "claude-mem",
+  "name": "rad-mem",
   "version": "6.3.2",
-  "description": "Memory compression system for Claude Code - persist context across sessions",
+  "description": "RAD Protocol server - platform-agnostic memory system for AI agents",
   "keywords": [
-    "claude",
-    "claude-code",
-    "claude-agent-sdk",
-    "mcp",
-    "plugin",
+    "rad",
+    "rad-protocol",
+    "ai-agents",
     "memory",
-    "compression",
-    "knowledge-graph",
-    "transcript",
+    "claude-agent-sdk",
     "typescript",
     "nodejs"
   ],
@@ -19,11 +15,11 @@
   "license": "AGPL-3.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/thedotmack/claude-mem.git"
+    "url": "https://github.com/thedotmack/rad-mem.git"
   },
-  "homepage": "https://github.com/thedotmack/claude-mem#readme",
+  "homepage": "https://github.com/thedotmack/rad-mem#readme",
   "bugs": {
-    "url": "https://github.com/thedotmack/claude-mem/issues"
+    "url": "https://github.com/thedotmack/rad-mem/issues"
   },
   "type": "module",
   "engines": {
@@ -32,18 +28,11 @@
   "scripts": {
     "build": "node scripts/build-hooks.js",
     "test": "node --test tests/",
-    "test:parser": "npx tsx src/sdk/parser.test.ts",
-    "test:context": "echo '{\"session_id\":\"test-'$(date +%s)'\",\"cwd\":\"'$(pwd)'\",\"source\":\"startup\"}' | node plugin/scripts/context-hook.js 2>/dev/null",
-    "test:context:verbose": "echo '{\"session_id\":\"test-'$(date +%s)'\",\"cwd\":\"'$(pwd)'\",\"source\":\"startup\"}' | node plugin/scripts/context-hook.js",
-    "sync-marketplace": "rsync -av --delete --exclude=.git ./ ~/.claude/plugins/marketplaces/thedotmack/ && cd ~/.claude/plugins/marketplaces/thedotmack/ && npm install",
     "worker:start": "pm2 start ecosystem.config.cjs",
-    "worker:stop": "pm2 stop claude-mem-worker",
-    "worker:restart": "pm2 restart claude-mem-worker",
-    "worker:logs": "pm2 flush claude-mem-worker && pm2 logs claude-mem-worker --lines 100 --nostream",
-    "worker:logs:no-flush": "pm2 logs claude-mem-worker --lines 100 --nostream",
-    "changelog:generate": "node scripts/generate-changelog.js",
-    "usage:analyze": "node scripts/analyze-usage.js",
-    "usage:today": "node scripts/analyze-usage.js $(date +%Y-%m-%d)"
+    "worker:stop": "pm2 stop rad-mem-worker",
+    "worker:restart": "pm2 restart rad-mem-worker",
+    "worker:logs": "pm2 flush rad-mem-worker && pm2 logs rad-mem-worker --lines 100 --nostream",
+    "worker:logs:no-flush": "pm2 logs rad-mem-worker --lines 100 --nostream"
   },
   "dependencies": {
     "@anthropic-ai/claude-agent-sdk": "^0.1.27",

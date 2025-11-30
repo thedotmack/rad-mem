@@ -1,63 +1,84 @@
-/* To @claude: be vigilant about only leaving evergreen context in this file, claude-mem handles working context separately. */
+/* To @claude: Check TEMPORARY NOTES section below. Remove any notes past their expiration date. Today's date is in your <env> context. */
 
-# Claude-Mem: AI Development Instructions
+# rad-mem: RAD Protocol Server
 
 ## What This Project Is
 
-Claude-mem is a Claude Code plugin providing persistent memory across sessions. It captures tool usage, compresses observations using the Claude Agent SDK, and injects relevant context into future sessions.
+rad-mem is a **RAD Protocol server** - a platform-agnostic memory system for AI agents. Any platform (Claude Code, Cursor, VS Code, custom) can be a thin HTTP adapter that sends data to this server.
 
 **Current Version**: 6.3.2
 
 ## Architecture
 
-**5 Lifecycle Hooks**: SessionStart → UserPromptSubmit → PostToolUse → Summary → SessionEnd
+**RAD Server** (`src/services/worker-service.ts`) - Express API on port 38888, PM2-managed
 
-**Hooks** (`src/hooks/*.ts`) - TypeScript → ESM, built to `plugin/scripts/*-hook.js`
+**Database** (`src/services/sqlite/`) - SQLite3 at `~/.rad-mem/rad-mem.db` with FTS5 full-text search
 
-**Worker Service** (`src/services/worker-service.ts`) - Express API on port 37777, PM2-managed, handles AI processing asynchronously
+**Chroma** (`src/services/sync/ChromaSync.ts`) - Vector embeddings at `~/.rad-mem/vector-db` for semantic search
 
-**Database** (`src/services/sqlite/`) - SQLite3 at `~/.claude-mem/claude-mem.db` with FTS5 full-text search
-
-**Search Skill** (`plugin/skills/mem-search/SKILL.md`) - HTTP API for searching past work, auto-invoked when users ask about history
-
-**Chroma** (`src/services/sync/ChromaSync.ts`) - Vector embeddings for semantic search
-
-**Viewer UI** (`src/ui/viewer/`) - React interface at http://localhost:37777, built to `plugin/ui/viewer.html`
+**Viewer UI** (`src/ui/viewer/`) - React interface at http://localhost:38888
 
 ## Build Commands
 
-**Hooks only**: `npm run build && npm run sync-marketplace`
-
-**Worker changes**: `npm run build && npm run sync-marketplace && npm run worker:restart`
-
-**Skills only**: `npm run sync-marketplace`
-
-**Viewer UI**: `npm run build && npm run sync-marketplace && npm run worker:restart`
+```bash
+npm run build           # Compile TypeScript
+npm run worker:restart  # Restart PM2 worker (rad-mem-worker)
+npm run worker:logs     # View worker logs
+```
 
 ## Environment Variables
 
+- `RAD_MEM_PORT` - Server port (default: 38888)
 - `CLAUDE_MEM_MODEL` - Model for observations/summaries (default: claude-haiku-4-5)
-- `CLAUDE_MEM_CONTEXT_OBSERVATIONS` - Observations injected at SessionStart (default: 50)
-- `CLAUDE_MEM_WORKER_PORT` - Worker service port (default: 37777)
 
-## File Locations
+## RAD Protocol Endpoints
 
-- **Source**: `<project-root>/src/`
-- **Built Plugin**: `<project-root>/plugin/`
-- **Installed Plugin**: `~/.claude/plugins/marketplaces/thedotmack/`
-- **Database**: `~/.claude-mem/claude-mem.db`
-- **Chroma**: `~/.claude-mem/chroma/`
-- **Usage Logs**: `~/.claude-mem/usage-logs/usage-YYYY-MM-DD.jsonl`
+### Session Management
+- `POST /api/sessions/ensure` - Idempotent session creation
+  - Input: `{ agent_session_id, platform, project, user_prompt? }`
+  - Output: `{ id, prompt_number, created }`
+
+### Context Retrieval
+- `GET /api/context/:project` - Historical context for injection
+  - Query: `?limit=50&summary_limit=10`
+  - Output: `{ project, observations[], summaries[], tokenStats }`
+
+### Observation Intake
+- `POST /api/observations` - Accept observations from any platform
+  - Input: `{ agent_session_id, platform, tool_name, tool_input, tool_response, cwd }`
+  - Output: `{ status: 'queued'|'skipped', id?, prompt_number?, reason? }`
+  - Filters: TodoWrite, SlashCommand, Skill, AskUserQuestion, ListMcpResourcesTool
+
+### Session Lifecycle
+- `POST /api/sessions/summarize` - Queue summary generation
+  - Input: `{ agent_session_id, platform, last_user_message?, last_assistant_message? }`
+  - Output: `{ status: 'queued', id }`
+- `POST /api/sessions/complete` - Mark session complete
+  - Input: `{ agent_session_id, platform, reason? }`
+  - Output: `{ success: true, id }`
+
+## Glossary
+
+| Term | Definition |
+|------|------------|
+| `agent_session_id` | The AI agent's session UUID (from external platforms) |
+| `platform` | Which platform sent data ("claude-code", "cursor", "vscode") |
+| `id` | RAD's internal session ID |
+| `observation` | Captured insight from tool use |
 
 ## Quick Reference
 
 ```bash
-npm run build                 # Compile TypeScript
-npm run sync-marketplace      # Copy to ~/.claude/plugins
-npm run worker:restart        # Restart PM2 worker
-npm run worker:logs           # View worker logs
-pm2 list                      # Check worker status
-pm2 delete claude-mem-worker  # Force clean start
+npm run build && npm run worker:restart  # Build and restart
+pm2 list                                  # Check worker status
+pm2 logs rad-mem-worker                   # View logs
+curl http://localhost:38888/health        # Health check
 ```
 
-**Viewer UI**: http://localhost:37777
+**Viewer UI**: http://localhost:38888
+
+---
+
+## Temporary Notes
+
+<!-- Remove notes when past expiration date -->

@@ -20,9 +20,9 @@ function stripProjectRoot(filePath: string): string {
   }
 
   // Fallback: if path contains project name, strip everything before it
-  const projectIndex = filePath.indexOf('claude-mem/');
+  const projectIndex = filePath.indexOf('rad-mem/');
   if (projectIndex !== -1) {
-    return filePath.substring(projectIndex + 'claude-mem/'.length);
+    return filePath.substring(projectIndex + 'rad-mem/'.length);
   }
 
   // If no markers found, return basename or original path

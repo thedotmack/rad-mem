@@ -211,7 +211,7 @@ async function summaryHook(input?: StopInput): Promise<void> {
   } catch (error: any) {
     // Only show restart message for connection errors, not HTTP errors
     if (error.cause?.code === 'ECONNREFUSED' || error.name === 'TimeoutError' || error.message.includes('fetch failed')) {
-      throw new Error("There's a problem with the worker. If you just updated, type `pm2 restart claude-mem-worker` in your terminal to continue");
+      throw new Error("There's a problem with the worker. If you just updated, type `pm2 restart rad-mem-worker` in your terminal to continue");
     }
     // Re-throw HTTP errors and other errors as-is
     throw error;

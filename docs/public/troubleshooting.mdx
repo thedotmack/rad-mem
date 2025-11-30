@@ -1,6 +1,6 @@
 ---
 title: "Troubleshooting"
-description: "Common issues and solutions for Claude-Mem"
+description: "Common issues and solutions for Rad-Mem"
 ---
 
 # Troubleshooting Guide
@@ -67,7 +67,7 @@ The skill includes comprehensive diagnostics, automated repair sequences, and de
 1. Check browser localStorage is enabled:
    ```javascript
    // In browser console
-   localStorage.getItem('claude-mem-settings')
+   localStorage.getItem('rad-mem-settings')
    ```
 
 2. Verify settings endpoint is working:
@@ -78,7 +78,7 @@ The skill includes comprehensive diagnostics, automated repair sequences, and de
 3. Clear localStorage and try again:
    ```javascript
    // In browser console
-   localStorage.removeItem('claude-mem-settings')
+   localStorage.removeItem('rad-mem-settings')
    ```
 
 4. Check for browser privacy mode (blocks localStorage)
@@ -178,7 +178,7 @@ The skill includes comprehensive diagnostics, automated repair sequences, and de
 
 1. This was fixed in v5.1.1 - update to latest version:
    ```bash
-   /plugin update claude-mem
+   /plugin update rad-mem
    ```
 
 2. If still experiencing issues, verify PM2 path:
@@ -217,7 +217,7 @@ The skill includes comprehensive diagnostics, automated repair sequences, and de
 
 4. Full reset:
    ```bash
-   pm2 delete claude-mem-worker
+   pm2 delete rad-mem-worker
    npm run worker:start
    ```
 
@@ -251,7 +251,7 @@ The skill includes comprehensive diagnostics, automated repair sequences, and de
 
 4. Verify new port:
    ```bash
-   cat ~/.claude-mem/worker.port
+   cat ~/.rad-mem/worker.port
    ```
 
 ### Worker Keeps Crashing
@@ -279,7 +279,7 @@ The skill includes comprehensive diagnostics, automated repair sequences, and de
 
 4. Check database for corruption:
    ```bash
-   sqlite3 ~/.claude-mem/claude-mem.db "PRAGMA integrity_check;"
+   sqlite3 ~/.rad-mem/rad-mem.db "PRAGMA integrity_check;"
    ```
 
 ### Worker Not Processing Observations
@@ -300,7 +300,7 @@ The skill includes comprehensive diagnostics, automated repair sequences, and de
 
 3. Verify database has observations:
    ```bash
-   sqlite3 ~/.claude-mem/claude-mem.db "SELECT COUNT(*) FROM observations;"
+   sqlite3 ~/.rad-mem/rad-mem.db "SELECT COUNT(*) FROM observations;"
    ```
 
 4. Restart worker:
@@ -345,7 +345,7 @@ The skill includes comprehensive diagnostics, automated repair sequences, and de
 
 1. Check if summaries exist:
    ```bash
-   sqlite3 ~/.claude-mem/claude-mem.db "SELECT COUNT(*) FROM session_summaries;"
+   sqlite3 ~/.rad-mem/rad-mem.db "SELECT COUNT(*) FROM session_summaries;"
    ```
 
 2. View recent sessions:
@@ -355,7 +355,7 @@ The skill includes comprehensive diagnostics, automated repair sequences, and de
 
 3. Check database integrity:
    ```bash
-   sqlite3 ~/.claude-mem/claude-mem.db "PRAGMA integrity_check;"
+   sqlite3 ~/.rad-mem/rad-mem.db "PRAGMA integrity_check;"
    ```
 
 4. Manually test context hook:
@@ -383,12 +383,12 @@ The skill includes comprehensive diagnostics, automated repair sequences, and de
 
 3. Check database size (large database = slow queries):
    ```bash
-   ls -lh ~/.claude-mem/claude-mem.db
+   ls -lh ~/.rad-mem/rad-mem.db
    ```
 
 4. Optimize database:
    ```bash
-   sqlite3 ~/.claude-mem/claude-mem.db "VACUUM;"
+   sqlite3 ~/.rad-mem/rad-mem.db "VACUUM;"
    ```
 
 ### Dependencies Not Installing
@@ -424,12 +424,12 @@ The skill includes comprehensive diagnostics, automated repair sequences, and de
 
 1. Close all connections:
    ```bash
-   pm2 stop claude-mem-worker
+   pm2 stop rad-mem-worker
    ```
 
 2. Check for stale locks:
    ```bash
-   lsof ~/.claude-mem/claude-mem.db
+   lsof ~/.rad-mem/rad-mem.db
    ```
 
 3. Kill processes holding locks:
@@ -450,22 +450,22 @@ The skill includes comprehensive diagnostics, automated repair sequences, and de
 
 1. Check database integrity:
    ```bash
-   sqlite3 ~/.claude-mem/claude-mem.db "PRAGMA integrity_check;"
+   sqlite3 ~/.rad-mem/rad-mem.db "PRAGMA integrity_check;"
    ```
 
 2. Backup database:
    ```bash
-   cp ~/.claude-mem/claude-mem.db ~/.claude-mem/claude-mem.db.backup
+   cp ~/.rad-mem/rad-mem.db ~/.rad-mem/rad-mem.db.backup
    ```
 
 3. Try to repair:
    ```bash
-   sqlite3 ~/.claude-mem/claude-mem.db "VACUUM;"
+   sqlite3 ~/.rad-mem/rad-mem.db "VACUUM;"
    ```
 
 4. Nuclear option - recreate database:
    ```bash
-   rm ~/.claude-mem/claude-mem.db
+   rm ~/.rad-mem/rad-mem.db
    npm run worker:start  # Will recreate schema
    ```
 
@@ -477,12 +477,12 @@ The skill includes comprehensive diagnostics, automated repair sequences, and de
 
 1. Check FTS5 tables exist:
    ```bash
-   sqlite3 ~/.claude-mem/claude-mem.db "SELECT name FROM sqlite_master WHERE type='table' AND name LIKE '%_fts';"
+   sqlite3 ~/.rad-mem/rad-mem.db "SELECT name FROM sqlite_master WHERE type='table' AND name LIKE '%_fts';"
    ```
 
 2. Rebuild FTS5 tables:
    ```bash
-   sqlite3 ~/.claude-mem/claude-mem.db "
+   sqlite3 ~/.rad-mem/rad-mem.db "
      INSERT INTO observations_fts(observations_fts) VALUES('rebuild');
      INSERT INTO session_summaries_fts(session_summaries_fts) VALUES('rebuild');
      INSERT INTO user_prompts_fts(user_prompts_fts) VALUES('rebuild');
@@ -491,7 +491,7 @@ The skill includes comprehensive diagnostics, automated repair sequences, and de
 
 3. Check triggers exist:
    ```bash
-   sqlite3 ~/.claude-mem/claude-mem.db "SELECT name FROM sqlite_master WHERE type='trigger';"
+   sqlite3 ~/.rad-mem/rad-mem.db "SELECT name FROM sqlite_master WHERE type='trigger';"
    ```
 
 ### Database Too Large
@@ -502,17 +502,17 @@ The skill includes comprehensive diagnostics, automated repair sequences, and de
 
 1. Check database size:
    ```bash
-   ls -lh ~/.claude-mem/claude-mem.db
+   ls -lh ~/.rad-mem/rad-mem.db
    ```
 
 2. Vacuum database:
    ```bash
-   sqlite3 ~/.claude-mem/claude-mem.db "VACUUM;"
+   sqlite3 ~/.rad-mem/rad-mem.db "VACUUM;"
    ```
 
 3. Delete old sessions:
    ```bash
-   sqlite3 ~/.claude-mem/claude-mem.db "
+   sqlite3 ~/.rad-mem/rad-mem.db "
      DELETE FROM observations WHERE created_at_epoch < $(date -v-30d +%s);
      DELETE FROM session_summaries WHERE created_at_epoch < $(date -v-30d +%s);
      DELETE FROM sdk_sessions WHERE created_at_epoch < $(date -v-30d +%s);
@@ -521,7 +521,7 @@ The skill includes comprehensive diagnostics, automated repair sequences, and de
 
 4. Rebuild FTS5 after deletion:
    ```bash
-   sqlite3 ~/.claude-mem/claude-mem.db "
+   sqlite3 ~/.rad-mem/rad-mem.db "
      INSERT INTO observations_fts(observations_fts) VALUES('rebuild');
      INSERT INTO session_summaries_fts(session_summaries_fts) VALUES('rebuild');
    "
@@ -560,12 +560,12 @@ The skill includes comprehensive diagnostics, automated repair sequences, and de
 
 1. Check database has data:
    ```bash
-   sqlite3 ~/.claude-mem/claude-mem.db "SELECT COUNT(*) FROM observations;"
+   sqlite3 ~/.rad-mem/rad-mem.db "SELECT COUNT(*) FROM observations;"
    ```
 
 2. Verify FTS5 tables populated:
    ```bash
-   sqlite3 ~/.claude-mem/claude-mem.db "SELECT COUNT(*) FROM observations_fts;"
+   sqlite3 ~/.rad-mem/rad-mem.db "SELECT COUNT(*) FROM observations_fts;"
    ```
 
 3. Test simple query:
@@ -629,7 +629,7 @@ The skill includes comprehensive diagnostics, automated repair sequences, and de
 
 2. Optimize database:
    ```bash
-   sqlite3 ~/.claude-mem/claude-mem.db "
+   sqlite3 ~/.rad-mem/rad-mem.db "
      ANALYZE;
      VACUUM;
    "
@@ -637,7 +637,7 @@ The skill includes comprehensive diagnostics, automated repair sequences, and de
 
 3. Add indexes (if missing):
    ```bash
-   sqlite3 ~/.claude-mem/claude-mem.db "
+   sqlite3 ~/.rad-mem/rad-mem.db "
      CREATE INDEX IF NOT EXISTS idx_sessions_project_created ON sdk_sessions(project, created_at_epoch DESC);
    "
    ```
@@ -684,18 +684,18 @@ The skill includes comprehensive diagnostics, automated repair sequences, and de
 
 ### Plugin Not Found
 
-**Symptoms**: `/plugin install claude-mem` fails.
+**Symptoms**: `/plugin install rad-mem` fails.
 
 **Solutions**:
 
 1. Add marketplace first:
    ```bash
-   /plugin marketplace add thedotmack/claude-mem
+   /plugin marketplace add thedotmack/rad-mem
    ```
 
 2. Then install:
    ```bash
-   /plugin install claude-mem
+   /plugin install rad-mem
    ```
 
 3. Verify installation:
@@ -751,7 +751,7 @@ The skill includes comprehensive diagnostics, automated repair sequences, and de
 ### Enable Verbose Logging
 
 ```bash
-export DEBUG=claude-mem:*
+export DEBUG=rad-mem:*
 npm run worker:restart
 npm run worker:logs
 ```
@@ -761,7 +761,7 @@ npm run worker:logs
 Trace observations through the pipeline:
 
 ```bash
-sqlite3 ~/.claude-mem/claude-mem.db "
+sqlite3 ~/.rad-mem/rad-mem.db "
   SELECT correlation_id, tool_name, created_at
   FROM observations
   WHERE session_id = 'YOUR_SESSION_ID'
@@ -776,10 +776,10 @@ sqlite3 ~/.claude-mem/claude-mem.db "
 pm2 status
 
 # View logs
-pm2 logs claude-mem-worker
+pm2 logs rad-mem-worker
 
 # Check port file
-cat ~/.claude-mem/worker.port
+cat ~/.rad-mem/worker.port
 
 # Test worker health
 curl http://localhost:37777/health
@@ -788,7 +788,7 @@ curl http://localhost:37777/health
 ### Database Inspection
 
 ```bash
-sqlite3 ~/.claude-mem/claude-mem.db
+sqlite3 ~/.rad-mem/rad-mem.db
 
 # View schema
 .schema
@@ -830,7 +830,7 @@ SELECT created_at, tool_name FROM observations ORDER BY created_at DESC LIMIT 10
 
 **Cause**: Database file permissions or missing directory.
 
-**Solution**: Check `~/.claude-mem/` exists and is writable.
+**Solution**: Check `~/.rad-mem/` exists and is writable.
 
 ### "Module not found"
 
@@ -847,7 +847,7 @@ If none of these solutions work:
    npm run worker:logs
    ```
 
-2. **Create issue**: [GitHub Issues](https://github.com/thedotmack/claude-mem/issues)
+2. **Create issue**: [GitHub Issues](https://github.com/thedotmack/rad-mem/issues)
    - Include error messages
    - Include relevant logs
    - Include steps to reproduce
@@ -856,6 +856,6 @@ If none of these solutions work:
 
 ## Next Steps
 
-- [Configuration](configuration) - Customize Claude-Mem
+- [Configuration](configuration) - Customize Rad-Mem
 - [Development](development) - Build from source
 - [Architecture](architecture/overview) - Understand the system

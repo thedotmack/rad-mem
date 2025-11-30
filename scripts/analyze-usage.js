@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Analyze usage logs from ~/.claude-mem/usage-logs/
+ * Analyze usage logs from ~/.rad-mem/usage-logs/
  *
  * Usage:
  *   node scripts/analyze-usage.js [date]
@@ -14,7 +14,7 @@ import { readFileSync, readdirSync } from 'fs';
 import { join } from 'path';
 import { homedir } from 'os';
 
-const usageDir = join(homedir(), '.claude-mem', 'usage-logs');
+const usageDir = join(homedir(), '.rad-mem', 'usage-logs');
 
 // Get date from command line or use today
 const targetDate = process.argv[2] || new Date().toISOString().split('T')[0];

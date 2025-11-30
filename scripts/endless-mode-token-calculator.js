@@ -53,7 +53,7 @@ const observationsData = [{"id":10136,"type":"decision","title":"Token Accountin
 {"id":10099,"type":"discovery","title":"Session persistence mechanism relies on SDK internal state without context reload","discovery_tokens":7806,"created_at_epoch":1763359091460,"compressed_size":1883},
 {"id":10097,"type":"change","title":"Worker service session init now extracts userPrompt and promptNumber from request body","discovery_tokens":7806,"created_at_epoch":1763359091459,"compressed_size":1148},
 {"id":10096,"type":"feature","title":"SessionManager enhanced to accept dynamic userPrompt updates during multi-turn conversations","discovery_tokens":7806,"created_at_epoch":1763359091457,"compressed_size":1528},
-{"id":10095,"type":"discovery","title":"Five lifecycle hooks integrate claude-mem at critical session boundaries","discovery_tokens":6625,"created_at_epoch":1763359074808,"compressed_size":1570},
+{"id":10095,"type":"discovery","title":"Five lifecycle hooks integrate rad-mem at critical session boundaries","discovery_tokens":6625,"created_at_epoch":1763359074808,"compressed_size":1570},
 {"id":10094,"type":"discovery","title":"PostToolUse hook is real-time observation creation point, not delayed processing","discovery_tokens":6625,"created_at_epoch":1763359074807,"compressed_size":2371},
 {"id":10093,"type":"discovery","title":"PostToolUse hook timing and compression integration options explored","discovery_tokens":1696,"created_at_epoch":1763359062088,"compressed_size":1605},
 {"id":10092,"type":"discovery","title":"Transcript transformation strategy for endless mode identified","discovery_tokens":6112,"created_at_epoch":1763359057563,"compressed_size":1968},

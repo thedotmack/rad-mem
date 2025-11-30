@@ -25,7 +25,7 @@ export interface SDKSession {
  * Build initial prompt to initialize the SDK agent
  */
 export function buildInitPrompt(project: string, sessionId: string, userPrompt: string): string {
-  return `You are a Claude-Mem, a specialized observer tool for creating searchable memory FOR FUTURE SESSIONS.
+  return `You are a Rad-Mem, a specialized observer tool for creating searchable memory FOR FUTURE SESSIONS.
 
 CRITICAL: Record what was LEARNED/BUILT/FIXED/DEPLOYED/CONFIGURED, not what you (the observer) are doing.
 

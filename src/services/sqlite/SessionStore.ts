@@ -29,6 +29,7 @@ export class SessionStore {
     this.makeObservationsTextNullable();
     this.createUserPromptsTable();
     this.ensureDiscoveryTokensColumn();
+    this.ensurePlatformColumn();
   }
 
   /**
@@ -531,6 +532,33 @@ export class SessionStore {
   }
 
   /**
+   * Ensure platform column exists for RAD Protocol multi-platform support (migration 15)
+   * This column identifies which platform sent the data ("claude-code", "cursor", "vscode")
+   */
+  private ensurePlatformColumn(): void {
+    try {
+      // Check if migration already applied
+      const applied = this.db.prepare('SELECT version FROM schema_versions WHERE version = ?').get(15) as {version: number} | undefined;
+      if (applied) return;
+
+      // Check if platform column exists in sdk_sessions table
+      const sessionsInfo = this.db.pragma('table_info(sdk_sessions)');
+      const hasPlatform = (sessionsInfo as any[]).some((col: any) => col.name === 'platform');
+
+      if (!hasPlatform) {
+        this.db.exec("ALTER TABLE sdk_sessions ADD COLUMN platform TEXT DEFAULT 'claude-code'");
+        console.error('[SessionStore] Added platform column to sdk_sessions table');
+      }
+
+      // Record migration
+      this.db.prepare('INSERT OR IGNORE INTO schema_versions (version, applied_at) VALUES (?, ?)').run(15, new Date().toISOString());
+    } catch (error: any) {
+      console.error('[SessionStore] Platform column migration error:', error.message);
+      throw error;
+    }
+  }
+
+  /**
    * Get recent session summaries for a project
    */
   getRecentSummaries(project: string, limit: number = 10): Array<{
@@ -975,7 +1003,7 @@ export class SessionStore {
    *
    * CRITICAL ARCHITECTURE: Session ID Threading
    * ============================================
-   * This function is the KEY to how claude-mem stays unified across hooks:
+   * This function is the KEY to how rad-mem stays unified across hooks:
    *
    * - NEW hook calls: createSDKSession(session_id, project, prompt)
    * - SAVE hook calls: createSDKSession(session_id, '', '')
@@ -1032,6 +1060,76 @@ export class SessionStore {
     }
 
     return result.lastInsertRowid as number;
+  }
+
+  /**
+   * Ensure a session exists for the given agent_session_id and platform (RAD Protocol)
+   *
+   * This is the primary entry point for external platforms (Claude Code, Cursor, VS Code, etc.)
+   * It's idempotent: creates session if new, increments prompt counter if existing.
+   *
+   * @param agent_session_id - The AI agent's session UUID (from the external platform)
+   * @param platform - Which platform sent the data ("claude-code", "cursor", "vscode")
+   * @param project - The project/codebase being worked on
+   * @param user_prompt - Optional user prompt text for this interaction
+   * @returns { id, prompt_number, created } where id is RAD's internal session ID
+   */
+  ensureSession(
+    agent_session_id: string,
+    platform: string,
+    project: string,
+    user_prompt?: string
+  ): { id: number; prompt_number: number; created: boolean } {
+    // Check if session already exists
+    const existing = this.db.prepare(`
+      SELECT id, prompt_counter FROM sdk_sessions WHERE claude_session_id = ?
+    `).get(agent_session_id) as { id: number; prompt_counter: number | null } | undefined;
+
+    if (existing) {
+      // Session exists - increment prompt counter
+      const newPromptNumber = (existing.prompt_counter || 0) + 1;
+
+      // Update prompt counter, user_prompt (if provided), and ensure project is set
+      if (user_prompt) {
+        this.db.prepare(`
+          UPDATE sdk_sessions
+          SET prompt_counter = ?, user_prompt = ?, project = COALESCE(NULLIF(?, ''), project)
+          WHERE id = ?
+        `).run(newPromptNumber, user_prompt, project, existing.id);
+      } else {
+        this.db.prepare(`
+          UPDATE sdk_sessions
+          SET prompt_counter = ?, project = COALESCE(NULLIF(?, ''), project)
+          WHERE id = ?
+        `).run(newPromptNumber, project, existing.id);
+      }
+
+      // Save user prompt if provided
+      if (user_prompt) {
+        this.saveUserPrompt(agent_session_id, newPromptNumber, user_prompt);
+      }
+
+      return { id: existing.id, prompt_number: newPromptNumber, created: false };
+    }
+
+    // Session doesn't exist - create new one
+    const now = new Date();
+    const nowEpoch = now.getTime();
+
+    const result = this.db.prepare(`
+      INSERT INTO sdk_sessions
+      (claude_session_id, sdk_session_id, project, platform, user_prompt, prompt_counter, started_at, started_at_epoch, status)
+      VALUES (?, ?, ?, ?, ?, 1, ?, ?, 'active')
+    `).run(agent_session_id, agent_session_id, project, platform, user_prompt || null, now.toISOString(), nowEpoch);
+
+    const newId = result.lastInsertRowid as number;
+
+    // Save user prompt if provided
+    if (user_prompt) {
+      this.saveUserPrompt(agent_session_id, 1, user_prompt);
+    }
+
+    return { id: newId, prompt_number: 1, created: true };
   }
 
   /**

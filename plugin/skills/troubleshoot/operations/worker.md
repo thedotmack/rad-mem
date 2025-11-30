@@ -1,10 +1,10 @@
 # Worker Service Diagnostics
 
-PM2 worker-specific troubleshooting for claude-mem.
+PM2 worker-specific troubleshooting for rad-mem.
 
 ## PM2 Worker Overview
 
-The claude-mem worker is a persistent background service managed by PM2. It:
+The rad-mem worker is a persistent background service managed by PM2. It:
 - Runs Express.js server on port 37777 (default)
 - Processes observations asynchronously
 - Serves the viewer UI
@@ -21,13 +21,13 @@ pm2 list
 # JSON format (parseable)
 pm2 jlist
 
-# Filter for claude-mem-worker
-pm2 status | grep claude-mem-worker
+# Filter for rad-mem-worker
+pm2 status | grep rad-mem-worker
 ```
 
 **Expected output:**
 ```
-│ claude-mem-worker │ online    │ 12345  │ 0    │ 45m │ 0% │ 85.6mb │
+│ rad-mem-worker │ online    │ 12345  │ 0    │ 45m │ 0% │ 85.6mb │
 ```
 
 **Status meanings:**
@@ -41,10 +41,10 @@ pm2 status | grep claude-mem-worker
 
 ```bash
 # Show detailed information
-pm2 show claude-mem-worker
+pm2 show rad-mem-worker
 
 # JSON format
-pm2 jlist | grep -A 20 '"name":"claude-mem-worker"'
+pm2 jlist | grep -A 20 '"name":"rad-mem-worker"'
 ```
 
 ## Worker Health Endpoint
@@ -56,7 +56,7 @@ The worker exposes a health endpoint at `/health`:
 curl -s http://127.0.0.1:37777/health
 
 # With custom port
-PORT=$(grep CLAUDE_MEM_WORKER_PORT ~/.claude-mem/settings.json | grep -o '[0-9]\+' || echo "37777")
+PORT=$(grep CLAUDE_MEM_WORKER_PORT ~/.rad-mem/settings.json | grep -o '[0-9]\+' || echo "37777")
 curl -s http://127.0.0.1:$PORT/health
 ```
 
@@ -73,29 +73,29 @@ curl -s http://127.0.0.1:$PORT/health
 
 ```bash
 # Last 50 lines
-pm2 logs claude-mem-worker --lines 50 --nostream
+pm2 logs rad-mem-worker --lines 50 --nostream
 
 # Last 200 lines
-pm2 logs claude-mem-worker --lines 200 --nostream
+pm2 logs rad-mem-worker --lines 200 --nostream
 
 # Follow logs in real-time
-pm2 logs claude-mem-worker
+pm2 logs rad-mem-worker
 ```
 
 ### Search Logs for Errors
 
 ```bash
 # Find errors
-pm2 logs claude-mem-worker --lines 500 --nostream | grep -i "error"
+pm2 logs rad-mem-worker --lines 500 --nostream | grep -i "error"
 
 # Find exceptions
-pm2 logs claude-mem-worker --lines 500 --nostream | grep -i "exception"
+pm2 logs rad-mem-worker --lines 500 --nostream | grep -i "exception"
 
 # Find failed requests
-pm2 logs claude-mem-worker --lines 500 --nostream | grep -i "failed"
+pm2 logs rad-mem-worker --lines 500 --nostream | grep -i "failed"
 
 # All error patterns
-pm2 logs claude-mem-worker --lines 500 --nostream | grep -iE "error|exception|failed|crash"
+pm2 logs rad-mem-worker --lines 500 --nostream | grep -iE "error|exception|failed|crash"
 ```
 
 ### Common Log Patterns
@@ -122,8 +122,8 @@ Port 37777 already in use
 
 **Crashes:**
 ```
-PM2        | App [claude-mem-worker] exited with code [1]
-PM2        | App [claude-mem-worker] will restart in 100ms
+PM2        | App [rad-mem-worker] exited with code [1]
+PM2        | App [rad-mem-worker] will restart in 100ms
 ```
 
 ## Starting the Worker
@@ -148,10 +148,10 @@ node_modules/.bin/pm2 start ecosystem.config.cjs
 
 ```bash
 # Restart if already running
-pm2 restart claude-mem-worker
+pm2 restart rad-mem-worker
 
 # Delete and start fresh
-pm2 delete claude-mem-worker
+pm2 delete rad-mem-worker
 pm2 start ecosystem.config.cjs
 ```
 
@@ -159,10 +159,10 @@ pm2 start ecosystem.config.cjs
 
 ```bash
 # Graceful stop
-pm2 stop claude-mem-worker
+pm2 stop rad-mem-worker
 
 # Delete completely (also removes from PM2 list)
-pm2 delete claude-mem-worker
+pm2 delete rad-mem-worker
 ```
 
 ## Worker Not Starting
@@ -196,7 +196,7 @@ pm2 delete claude-mem-worker
    ```bash
    lsof -i :37777
    ```
-   If port in use, either kill that process or change claude-mem port.
+   If port in use, either kill that process or change rad-mem port.
 
 ### Common Fixes
 
@@ -209,8 +209,8 @@ pm2 start ecosystem.config.cjs
 
 **Port conflict:**
 ```bash
-echo '{"env":{"CLAUDE_MEM_WORKER_PORT":"37778"}}' > ~/.claude-mem/settings.json
-pm2 restart claude-mem-worker
+echo '{"env":{"CLAUDE_MEM_WORKER_PORT":"37778"}}' > ~/.rad-mem/settings.json
+pm2 restart rad-mem-worker
 ```
 
 **Corrupted PM2:**
@@ -228,33 +228,33 @@ If worker keeps restarting (check with `pm2 status` showing high restart count):
 
 1. **Check error logs:**
    ```bash
-   pm2 logs claude-mem-worker --err --lines 100 --nostream
+   pm2 logs rad-mem-worker --err --lines 100 --nostream
    ```
 
 2. **Look for crash pattern:**
    ```bash
-   pm2 logs claude-mem-worker --lines 200 --nostream | grep -A 5 "exited with code"
+   pm2 logs rad-mem-worker --lines 200 --nostream | grep -A 5 "exited with code"
    ```
 
 ### Common Crash Causes
 
 **Database corruption:**
 ```bash
-sqlite3 ~/.claude-mem/claude-mem.db "PRAGMA integrity_check;"
+sqlite3 ~/.rad-mem/rad-mem.db "PRAGMA integrity_check;"
 ```
 If fails, backup and recreate database.
 
 **Out of memory:**
 Check if database is too large or memory leak. Restart:
 ```bash
-pm2 restart claude-mem-worker
+pm2 restart rad-mem-worker
 ```
 
 **Port conflict race condition:**
 Another process grabbing port intermittently. Change port:
 ```bash
-echo '{"env":{"CLAUDE_MEM_WORKER_PORT":"37778"}}' > ~/.claude-mem/settings.json
-pm2 restart claude-mem-worker
+echo '{"env":{"CLAUDE_MEM_WORKER_PORT":"37778"}}' > ~/.rad-mem/settings.json
+pm2 restart rad-mem-worker
 ```
 
 ## PM2 Management Commands
@@ -265,13 +265,13 @@ pm2 list
 pm2 jlist  # JSON format
 
 # Show detailed info
-pm2 show claude-mem-worker
+pm2 show rad-mem-worker
 
 # Monitor resources
 pm2 monit
 
 # Clear logs
-pm2 flush claude-mem-worker
+pm2 flush rad-mem-worker
 
 # Restart PM2 daemon
 pm2 kill

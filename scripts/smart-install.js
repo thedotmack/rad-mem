@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Smart Install Script for claude-mem
+ * Smart Install Script for rad-mem
  *
  * Features:
  * - Only runs npm install when necessary (version change or missing deps)

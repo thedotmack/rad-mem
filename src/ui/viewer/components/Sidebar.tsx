@@ -267,7 +267,7 @@ export function Sidebar({ isOpen, settings, stats, isSaving, saveStatus, isConne
               Enable MCP Search Server
             </label>
             <div className="setting-description">
-              claude-mem suggests using skill-based search (saves ~2,500 tokens at session start), but some users prefer MCP. Disable to only use skill-based search. Requires Claude Code restart to apply changes.
+              rad-mem suggests using skill-based search (saves ~2,500 tokens at session start), but some users prefer MCP. Disable to only use skill-based search. Requires Claude Code restart to apply changes.
             </div>
             {mcpStatus && (
               <div className="save-status">{mcpStatus}</div>

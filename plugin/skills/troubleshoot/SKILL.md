@@ -1,11 +1,11 @@
 ---
 name: troubleshoot
-description: Diagnose and fix claude-mem installation issues. Checks PM2 worker status, database integrity, service health, dependencies, and provides automated fixes for common problems.
+description: Diagnose and fix rad-mem installation issues. Checks PM2 worker status, database integrity, service health, dependencies, and provides automated fixes for common problems.
 ---
 
-# Claude-Mem Troubleshooting Skill
+# Rad-Mem Troubleshooting Skill
 
-Diagnose and resolve installation and operational issues with the claude-mem plugin.
+Diagnose and resolve installation and operational issues with the rad-mem plugin.
 
 ## When to Use This Skill
 
@@ -54,7 +54,7 @@ Choose the appropriate operation file for detailed instructions:
 **Fast automated fix (try this first):**
 ```bash
 cd ~/.claude/plugins/marketplaces/thedotmack/ && \
-pm2 delete claude-mem-worker 2>/dev/null; \
+pm2 delete rad-mem-worker 2>/dev/null; \
 npm install && \
 node_modules/.bin/pm2 start ecosystem.config.cjs && \
 sleep 3 && \
@@ -77,13 +77,13 @@ When troubleshooting:
 ## Technical Notes
 
 - **Worker port:** Default 37777 (configurable via `CLAUDE_MEM_WORKER_PORT`)
-- **Database location:** `~/.claude-mem/claude-mem.db`
+- **Database location:** `~/.rad-mem/rad-mem.db`
 - **Plugin location:** `~/.claude/plugins/marketplaces/thedotmack/`
-- **PM2 process name:** `claude-mem-worker`
+- **PM2 process name:** `rad-mem-worker`
 
 ## Error Reporting
 
 If troubleshooting doesn't resolve the issue, collect diagnostic data and direct user to:
-https://github.com/thedotmack/claude-mem/issues
+https://github.com/thedotmack/rad-mem/issues
 
 See [operations/diagnostics.md](operations/diagnostics.md#reporting-issues) for details on what to collect.

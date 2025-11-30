@@ -92,7 +92,7 @@ for (const entry of entries) {
   }
 }
 
-const outputPath = '/Users/alexnewman/Scripts/claude-mem/docs/context/transcript-dump.md';
+const outputPath = '/Users/alexnewman/Scripts/rad-mem/docs/context/transcript-dump.md';
 writeFileSync(outputPath, output, 'utf-8');
 
 console.log(`\nTranscript dumped to: ${outputPath}`);

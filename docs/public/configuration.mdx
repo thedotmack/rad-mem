@@ -1,6 +1,6 @@
 ---
 title: "Configuration"
-description: "Environment variables and settings for Claude-Mem"
+description: "Environment variables and settings for Rad-Mem"
 ---
 
 # Configuration
@@ -10,7 +10,7 @@ description: "Environment variables and settings for Claude-Mem"
 | Variable                      | Default                         | Description                           |
 |-------------------------------|---------------------------------|---------------------------------------|
 | `CLAUDE_PLUGIN_ROOT`          | Set by Claude Code              | Plugin installation directory         |
-| `CLAUDE_MEM_DATA_DIR`         | `~/.claude-mem/`                | Data directory (production default)   |
+| `CLAUDE_MEM_DATA_DIR`         | `~/.rad-mem/`                | Data directory (production default)   |
 | `CLAUDE_CODE_PATH`            | Auto-detected                   | Path to Claude Code CLI (for Windows) |
 | `CLAUDE_MEM_WORKER_PORT`      | `37777`                         | Worker service port                   |
 | `CLAUDE_MEM_MODEL`            | `claude-sonnet-4-5`             | AI model for processing observations  |
@@ -32,7 +32,7 @@ Configure which AI model processes your observations.
 ### Using the Interactive Script
 
 ```bash
-./claude-mem-settings.sh
+./rad-mem-settings.sh
 ```
 
 This script manages `CLAUDE_MEM_MODEL` in `~/.claude/settings.json`.
@@ -52,12 +52,12 @@ Edit `~/.claude/settings.json`:
 ### Data Directory Structure
 
 The data directory location depends on the environment:
-- **Production (installed plugin)**: `~/.claude-mem/` (always, regardless of CLAUDE_PLUGIN_ROOT)
+- **Production (installed plugin)**: `~/.rad-mem/` (always, regardless of CLAUDE_PLUGIN_ROOT)
 - **Development**: Can be overridden with `CLAUDE_MEM_DATA_DIR`
 
 ```
-~/.claude-mem/
-├── claude-mem.db           # SQLite database
+~/.rad-mem/
+├── rad-mem.db           # SQLite database
 ├── .install-version        # Cached version for smart installer
 ├── worker.port             # Current worker port file
 └── logs/
@@ -95,7 +95,7 @@ Hooks are configured in `plugin/hooks/hooks.json`:
 
 ```json
 {
-  "description": "Claude-mem memory system hooks",
+  "description": "Rad-mem memory system hooks",
   "hooks": {
     "SessionStart": [{
       "hooks": [{
@@ -139,7 +139,7 @@ Hooks are configured in `plugin/hooks/hooks.json`:
 
 ### Search Configuration (v5.4.0+)
 
-**Migration Note**: As of v5.4.0, Claude-Mem uses skill-based search instead of MCP tools. As of v5.5.0, the skill was renamed to "mem-search" for better scope differentiation.
+**Migration Note**: As of v5.4.0, Rad-Mem uses skill-based search instead of MCP tools. As of v5.5.0, the skill was renamed to "mem-search" for better scope differentiation.
 
 **Previous (v5.3.x and earlier)**: MCP search server with 9 tools (~2,500 tokens per session)
 **Current (v5.4.0+)**: mem-search skill with HTTP API (~250 tokens per session)
@@ -153,7 +153,7 @@ Search operations are now provided via:
 
 ## Version Channel
 
-Claude-Mem supports switching between stable and beta versions via the web viewer UI.
+Rad-Mem supports switching between stable and beta versions via the web viewer UI.
 
 ### Accessing Version Channel
 
@@ -178,7 +178,7 @@ Worker service is managed by PM2 via `ecosystem.config.cjs`:
 ```javascript
 module.exports = {
   apps: [{
-    name: 'claude-mem-worker',
+    name: 'rad-mem-worker',
     script: './plugin/scripts/worker-service.cjs',
     instances: 1,
     autorestart: true,
@@ -293,7 +293,7 @@ Modify PM2 memory limit in `ecosystem.config.cjs`:
 Enable debug logging:
 
 ```bash
-export DEBUG=claude-mem:*
+export DEBUG=rad-mem:*
 npm run worker:restart
 npm run worker:logs
 ```
@@ -352,7 +352,7 @@ If port 37777 is already in use:
 
 3. Verify new port:
    ```bash
-   cat ~/.claude-mem/worker.port
+   cat ~/.rad-mem/worker.port
    ```
 
 ## Next Steps

@@ -2,7 +2,7 @@
 
 > **rad-mem**: Real-time Agent Data Memory System
 >
-> This document captures the complete transformation plan from claude-mem (a Claude Code plugin) to rad-mem (a standalone RAD Protocol server).
+> This document captures the complete transformation plan from rad-mem (a Claude Code plugin) to rad-mem (a standalone RAD Protocol server).
 
 ---
 
@@ -56,10 +56,10 @@ Competitors (SuperMemory, Mem0, Zep) analyze conversations **after** they're com
 
 ## Current Architecture Analysis
 
-### What We Have (claude-mem v6.3.2)
+### What We Have (rad-mem v6.3.2)
 
 ```
-claude-mem/
+rad-mem/
 ├── src/
 │   ├── hooks/                    # Claude Code-specific hooks
 │   │   ├── context-hook.ts       # SessionStart - loads context
@@ -832,7 +832,7 @@ CREATE VIRTUAL TABLE rad_entities_fts USING fts5(
 ### Current Structure
 
 ```
-claude-mem/
+rad-mem/
 ├── src/
 │   ├── hooks/           # Claude Code specific - TO REMOVE
 │   ├── services/        # Core - KEEP & ENHANCE
@@ -1020,7 +1020,7 @@ Ensure these methods are accessible via DatabaseManager:
 
 ## Summary
 
-This migration transforms claude-mem from a Claude Code-specific plugin to a standalone RAD Protocol server that can serve any AI agent client.
+This migration transforms rad-mem from a Claude Code-specific plugin to a standalone RAD Protocol server that can serve any AI agent client.
 
 **Key Principles:**
 1. Single point of database access (worker only)
@@ -1037,4 +1037,4 @@ This migration transforms claude-mem from a Claude Code-specific plugin to a sta
 ---
 
 *Document created: 2025-11-26*
-*Based on analysis of claude-mem v6.3.2*
+*Based on analysis of rad-mem v6.3.2*

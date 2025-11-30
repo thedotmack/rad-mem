@@ -1,35 +1,35 @@
 # Quick Commands Reference
 
-Essential commands for troubleshooting claude-mem.
+Essential commands for troubleshooting rad-mem.
 
 ## Worker Management
 
 ```bash
 # Check worker status
-pm2 status | grep claude-mem-worker
-pm2 jlist | grep claude-mem-worker  # JSON format
+pm2 status | grep rad-mem-worker
+pm2 jlist | grep rad-mem-worker  # JSON format
 
 # Start worker
 cd ~/.claude/plugins/marketplaces/thedotmack/
 pm2 start ecosystem.config.cjs
 
 # Restart worker
-pm2 restart claude-mem-worker
+pm2 restart rad-mem-worker
 
 # Stop worker
-pm2 stop claude-mem-worker
+pm2 stop rad-mem-worker
 
 # Delete worker (for clean restart)
-pm2 delete claude-mem-worker
+pm2 delete rad-mem-worker
 
 # View logs
-pm2 logs claude-mem-worker
+pm2 logs rad-mem-worker
 
 # View last N lines
-pm2 logs claude-mem-worker --lines 50 --nostream
+pm2 logs rad-mem-worker --lines 50 --nostream
 
 # Clear logs
-pm2 flush claude-mem-worker
+pm2 flush rad-mem-worker
 ```
 
 ## Health Checks
@@ -53,36 +53,36 @@ curl -s http://127.0.0.1:$PORT/health
 
 ```bash
 # Observation count
-sqlite3 ~/.claude-mem/claude-mem.db "SELECT COUNT(*) FROM observations;"
+sqlite3 ~/.rad-mem/rad-mem.db "SELECT COUNT(*) FROM observations;"
 
 # Session count
-sqlite3 ~/.claude-mem/claude-mem.db "SELECT COUNT(*) FROM sessions;"
+sqlite3 ~/.rad-mem/rad-mem.db "SELECT COUNT(*) FROM sessions;"
 
 # Recent observations
-sqlite3 ~/.claude-mem/claude-mem.db "SELECT created_at, type, title FROM observations ORDER BY created_at DESC LIMIT 10;"
+sqlite3 ~/.rad-mem/rad-mem.db "SELECT created_at, type, title FROM observations ORDER BY created_at DESC LIMIT 10;"
 
 # Recent sessions
-sqlite3 ~/.claude-mem/claude-mem.db "SELECT created_at, request FROM sessions ORDER BY created_at DESC LIMIT 5;"
+sqlite3 ~/.rad-mem/rad-mem.db "SELECT created_at, request FROM sessions ORDER BY created_at DESC LIMIT 5;"
 
 # Database size
-du -h ~/.claude-mem/claude-mem.db
+du -h ~/.rad-mem/rad-mem.db
 
 # Database integrity check
-sqlite3 ~/.claude-mem/claude-mem.db "PRAGMA integrity_check;"
+sqlite3 ~/.rad-mem/rad-mem.db "PRAGMA integrity_check;"
 
 # Projects in database
-sqlite3 ~/.claude-mem/claude-mem.db "SELECT DISTINCT project FROM observations ORDER BY project;"
+sqlite3 ~/.rad-mem/rad-mem.db "SELECT DISTINCT project FROM observations ORDER BY project;"
 ```
 
 ## Configuration
 
 ```bash
 # View current settings
-cat ~/.claude-mem/settings.json
+cat ~/.rad-mem/settings.json
 cat ~/.claude/settings.json
 
 # Change worker port
-echo '{"env":{"CLAUDE_MEM_WORKER_PORT":"37778"}}' > ~/.claude-mem/settings.json
+echo '{"env":{"CLAUDE_MEM_WORKER_PORT":"37778"}}' > ~/.rad-mem/settings.json
 
 # Change context observation count
 # Edit ~/.claude/settings.json and add:
@@ -132,16 +132,16 @@ curl -v http://127.0.0.1:37777/health
 
 ```bash
 # Search logs for errors
-pm2 logs claude-mem-worker --lines 100 --nostream | grep -i "error"
+pm2 logs rad-mem-worker --lines 100 --nostream | grep -i "error"
 
 # Search for specific keyword
-pm2 logs claude-mem-worker --lines 100 --nostream | grep "keyword"
+pm2 logs rad-mem-worker --lines 100 --nostream | grep "keyword"
 
 # Follow logs in real-time
-pm2 logs claude-mem-worker
+pm2 logs rad-mem-worker
 
 # Show only error logs
-pm2 logs claude-mem-worker --err
+pm2 logs rad-mem-worker --err
 ```
 
 ## File Locations
@@ -151,17 +151,17 @@ pm2 logs claude-mem-worker --err
 ~/.claude/plugins/marketplaces/thedotmack/
 
 # Database
-~/.claude-mem/claude-mem.db
+~/.rad-mem/rad-mem.db
 
 # Settings
-~/.claude-mem/settings.json
+~/.rad-mem/settings.json
 ~/.claude/settings.json
 
 # Chroma vector database
-~/.claude-mem/chroma/
+~/.rad-mem/chroma/
 
 # Usage logs
-~/.claude-mem/usage-logs/
+~/.rad-mem/usage-logs/
 
 # PM2 logs
 ~/.pm2/logs/
@@ -186,5 +186,5 @@ pm2 --version
 sqlite3 --version
 
 # Check disk space
-df -h ~/.claude-mem/
+df -h ~/.rad-mem/
 ```

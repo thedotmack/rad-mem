@@ -17,12 +17,12 @@ function getDirname(): string {
 const _dirname = getDirname();
 
 /**
- * Simple path configuration for claude-mem
+ * Simple path configuration for rad-mem
  * Standard paths based on Claude Code conventions
  */
 
 // Base directories
-export const DATA_DIR = process.env.CLAUDE_MEM_DATA_DIR || join(homedir(), '.claude-mem');
+export const DATA_DIR = process.env.RAD_MEM_DATA_DIR || join(homedir(), '.rad-mem');
 export const CLAUDE_CONFIG_DIR = process.env.CLAUDE_CONFIG_DIR || join(homedir(), '.claude');
 
 // Data subdirectories
@@ -31,7 +31,7 @@ export const LOGS_DIR = join(DATA_DIR, 'logs');
 export const TRASH_DIR = join(DATA_DIR, 'trash');
 export const BACKUPS_DIR = join(DATA_DIR, 'backups');
 export const USER_SETTINGS_PATH = join(DATA_DIR, 'settings.json');
-export const DB_PATH = join(DATA_DIR, 'claude-mem.db');
+export const DB_PATH = join(DATA_DIR, 'rad-mem.db');
 export const VECTOR_DB_DIR = join(DATA_DIR, 'vector-db');
 
 // Claude integration paths

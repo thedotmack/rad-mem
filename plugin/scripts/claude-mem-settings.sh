@@ -1,5 +1,5 @@
 #!/bin/bash
-# claude-mem-settings.sh - User settings manager for claude-mem plugin
+# rad-mem-settings.sh - User settings manager for rad-mem plugin
 
 USER_SETTINGS_FILE="$HOME/.claude/settings.json"
 
@@ -59,7 +59,7 @@ list_models() {
 
 # Interactive menu
 show_menu() {
-    echo "Claude Mem Plugin - Model Configuration"
+    echo "Rad Mem Plugin - Model Configuration"
     echo "======================================"
     echo "Current model: $(get_model)"
     echo "Settings file: $USER_SETTINGS_FILE"

@@ -1,4 +1,4 @@
-# Claude-Mem Context Documentation
+# Rad-Mem Context Documentation
 
 ## What This Folder Is
 

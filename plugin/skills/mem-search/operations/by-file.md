@@ -53,7 +53,7 @@ curl -s "http://localhost:37777/api/search/by-file?filePath=src/services/worker-
       "title": "Simplified worker health check logic",
       "subtitle": "Removed redundant PM2 status check",
       "created_at_epoch": 1699564800000,
-      "project": "claude-mem",
+      "project": "rad-mem",
       "files": ["src/services/worker-service.ts", "src/services/worker-utils.ts"]
     }
   ]
@@ -69,12 +69,12 @@ Found 8 observations related to "src/services/worker-service.ts":
 
 🔄 **#1245** Simplified worker health check logic
    > Removed redundant PM2 status check
-   > Nov 9, 2024 • claude-mem
+   > Nov 9, 2024 • rad-mem
    > Files: worker-service.ts, worker-utils.ts
 
 🟣 **#1246** Added SSE endpoint for real-time updates
    > Implemented Server-Sent Events for viewer UI
-   > Nov 8, 2024 • claude-mem
+   > Nov 8, 2024 • rad-mem
    > Files: worker-service.ts
 ```
 

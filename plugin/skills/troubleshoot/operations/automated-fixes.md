@@ -1,6 +1,6 @@
 # Automated Fix Sequences
 
-One-command fix sequences for common claude-mem issues.
+One-command fix sequences for common rad-mem issues.
 
 ## Quick Fix: Complete Reset and Restart
 
@@ -8,7 +8,7 @@ One-command fix sequences for common claude-mem issues.
 
 ```bash
 cd ~/.claude/plugins/marketplaces/thedotmack/ && \
-pm2 delete claude-mem-worker 2>/dev/null; \
+pm2 delete rad-mem-worker 2>/dev/null; \
 npm install && \
 node_modules/.bin/pm2 start ecosystem.config.cjs && \
 sleep 3 && \
@@ -44,7 +44,7 @@ pm2 status
 ```bash
 cd ~/.claude/plugins/marketplaces/thedotmack/ && \
 npm install && \
-pm2 restart claude-mem-worker
+pm2 restart rad-mem-worker
 ```
 
 ## Fix: Port Conflict
@@ -53,9 +53,9 @@ pm2 restart claude-mem-worker
 
 ```bash
 # Change to port 37778
-mkdir -p ~/.claude-mem && \
-echo '{"env":{"CLAUDE_MEM_WORKER_PORT":"37778"}}' > ~/.claude-mem/settings.json && \
-pm2 restart claude-mem-worker && \
+mkdir -p ~/.rad-mem && \
+echo '{"env":{"CLAUDE_MEM_WORKER_PORT":"37778"}}' > ~/.rad-mem/settings.json && \
+pm2 restart rad-mem-worker && \
 sleep 2 && \
 curl -s http://127.0.0.1:37778/health
 ```
@@ -68,16 +68,16 @@ curl -s http://127.0.0.1:37778/health
 
 ```bash
 # Backup and test integrity
-cp ~/.claude-mem/claude-mem.db ~/.claude-mem/claude-mem.db.backup && \
-sqlite3 ~/.claude-mem/claude-mem.db "PRAGMA integrity_check;" && \
-pm2 restart claude-mem-worker
+cp ~/.rad-mem/rad-mem.db ~/.rad-mem/rad-mem.db.backup && \
+sqlite3 ~/.rad-mem/rad-mem.db "PRAGMA integrity_check;" && \
+pm2 restart rad-mem-worker
 ```
 
 **If integrity check fails, recreate database:**
 ```bash
 # WARNING: This deletes all memory data
-mv ~/.claude-mem/claude-mem.db ~/.claude-mem/claude-mem.db.old && \
-pm2 restart claude-mem-worker
+mv ~/.rad-mem/rad-mem.db ~/.rad-mem/rad-mem.db.old && \
+pm2 restart rad-mem-worker
 ```
 
 ## Fix: Clean Reinstall
@@ -86,10 +86,10 @@ pm2 restart claude-mem-worker
 
 ```bash
 # Backup data first
-cp ~/.claude-mem/claude-mem.db ~/.claude-mem/claude-mem.db.backup 2>/dev/null
+cp ~/.rad-mem/rad-mem.db ~/.rad-mem/rad-mem.db.backup 2>/dev/null
 
 # Stop and remove worker
-pm2 delete claude-mem-worker 2>/dev/null
+pm2 delete rad-mem-worker 2>/dev/null
 
 # Reinstall dependencies
 cd ~/.claude/plugins/marketplaces/thedotmack/ && \
@@ -107,8 +107,8 @@ curl -s http://127.0.0.1:37777/health
 **Use when:** Logs are too large, want fresh start
 
 ```bash
-pm2 flush claude-mem-worker && \
-pm2 restart claude-mem-worker
+pm2 flush rad-mem-worker && \
+pm2 restart rad-mem-worker
 ```
 
 ## Verification Commands
@@ -117,19 +117,19 @@ pm2 restart claude-mem-worker
 
 ```bash
 # Check worker status
-pm2 status | grep claude-mem-worker
+pm2 status | grep rad-mem-worker
 
 # Check health
 curl -s http://127.0.0.1:37777/health
 
 # Check database
-sqlite3 ~/.claude-mem/claude-mem.db "SELECT COUNT(*) FROM observations;"
+sqlite3 ~/.rad-mem/rad-mem.db "SELECT COUNT(*) FROM observations;"
 
 # Check viewer
 curl -s http://127.0.0.1:37777/api/stats
 
 # Check logs for errors
-pm2 logs claude-mem-worker --lines 20 --nostream | grep -i error
+pm2 logs rad-mem-worker --lines 20 --nostream | grep -i error
 ```
 
 **All checks should pass:**

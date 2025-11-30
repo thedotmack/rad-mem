@@ -57,7 +57,7 @@ curl -s "http://localhost:37777/api/search/by-concept?concept=discovery&format=i
       "title": "Worker service uses PM2 for process management",
       "subtitle": "Discovered persistent background worker pattern",
       "created_at_epoch": 1699564800000,
-      "project": "claude-mem",
+      "project": "rad-mem",
       "concepts": ["discovery", "how-it-works"]
     }
   ]
@@ -73,12 +73,12 @@ Found 3 observations tagged with "discovery":
 
 🔵 **#1240** Worker service uses PM2 for process management
    > Discovered persistent background worker pattern
-   > Nov 9, 2024 • claude-mem
+   > Nov 9, 2024 • rad-mem
    > Tags: discovery, how-it-works
 
 🔵 **#1241** FTS5 full-text search enables instant searches
    > SQLite FTS5 virtual tables provide sub-100ms search
-   > Nov 9, 2024 • claude-mem
+   > Nov 9, 2024 • rad-mem
    > Tags: discovery, pattern
 ```
 

@@ -20,7 +20,7 @@ export interface SessionEndInput {
  */
 async function cleanupHook(input?: SessionEndInput): Promise<void> {
   // Log hook entry point
-  console.error('[claude-mem cleanup] Hook fired', {
+  console.error('[rad-mem cleanup] Hook fired', {
     input: input ? {
       session_id: input.session_id,
       cwd: input.cwd,
@@ -43,7 +43,7 @@ async function cleanupHook(input?: SessionEndInput): Promise<void> {
   }
 
   const { session_id, reason } = input;
-  console.error('[claude-mem cleanup] Searching for active SDK session', { session_id, reason });
+  console.error('[rad-mem cleanup] Searching for active SDK session', { session_id, reason });
 
   // Find active SDK session
   const db = new SessionStore();
@@ -51,13 +51,13 @@ async function cleanupHook(input?: SessionEndInput): Promise<void> {
 
   if (!session) {
     // No active session - nothing to clean up
-    console.error('[claude-mem cleanup] No active SDK session found', { session_id });
+    console.error('[rad-mem cleanup] No active SDK session found', { session_id });
     db.close();
     console.log('{"continue": true, "suppressOutput": true}');
     process.exit(0);
   }
 
-  console.error('[claude-mem cleanup] Active SDK session found', {
+  console.error('[rad-mem cleanup] Active SDK session found', {
     session_id: session.id,
     sdk_session_id: session.sdk_session_id,
     project: session.project,
@@ -66,7 +66,7 @@ async function cleanupHook(input?: SessionEndInput): Promise<void> {
 
   // Mark session as completed in DB
   db.markSessionCompleted(session.id);
-  console.error('[claude-mem cleanup] Session marked as completed in database');
+  console.error('[rad-mem cleanup] Session marked as completed in database');
 
   db.close();
 
@@ -77,13 +77,13 @@ async function cleanupHook(input?: SessionEndInput): Promise<void> {
       method: 'POST',
       signal: AbortSignal.timeout(1000)
     });
-    console.error('[claude-mem cleanup] Worker notified to stop processing indicator');
+    console.error('[rad-mem cleanup] Worker notified to stop processing indicator');
   } catch (err) {
     // Non-critical - worker might be down
-    console.error('[claude-mem cleanup] Failed to notify worker (non-critical):', err);
+    console.error('[rad-mem cleanup] Failed to notify worker (non-critical):', err);
   }
 
-  console.error('[claude-mem cleanup] Cleanup completed successfully');
+  console.error('[rad-mem cleanup] Cleanup completed successfully');
   console.log('{"continue": true, "suppressOutput": true}');
   process.exit(0);
 }

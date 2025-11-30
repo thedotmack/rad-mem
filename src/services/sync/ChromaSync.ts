@@ -79,7 +79,7 @@ export class ChromaSync {
   constructor(project: string) {
     this.project = project;
     this.collectionName = `cm__${project}`;
-    this.VECTOR_DB_DIR = path.join(os.homedir(), '.claude-mem', 'vector-db');
+    this.VECTOR_DB_DIR = path.join(os.homedir(), '.rad-mem', 'vector-db');
   }
 
   /**
@@ -105,7 +105,7 @@ export class ChromaSync {
       });
 
       this.client = new Client({
-        name: 'claude-mem-chroma-sync',
+        name: 'rad-mem-chroma-sync',
         version: '1.0.0'
       }, {
         capabilities: {}

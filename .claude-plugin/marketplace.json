@@ -5,11 +5,11 @@
   },
   "metadata": {
     "description": "Plugins by Alex Newman (thedotmack)",
-    "homepage": "https://github.com/thedotmack/claude-mem"
+    "homepage": "https://github.com/thedotmack/rad-mem"
   },
   "plugins": [
     {
-      "name": "claude-mem",
+      "name": "rad-mem",
       "version": "6.3.2",
       "source": "./plugin",
       "description": "Persistent memory system for Claude Code - context compression across sessions"

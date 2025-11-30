@@ -7,7 +7,7 @@
  * Stop doing this: `const value = something || '';`
  * Start doing this: `const value = something || silentDebug('something was undefined');`
  *
- * Logs to ~/.claude-mem/silent.log and returns a fallback value.
+ * Logs to ~/.rad-mem/silent.log and returns a fallback value.
  * Check logs with `npm run logs:silent`
  *
  * Usage:
@@ -27,7 +27,7 @@ import { appendFileSync } from 'fs';
 import { homedir } from 'os';
 import { join } from 'path';
 
-const LOG_FILE = join(homedir(), '.claude-mem', 'silent.log');
+const LOG_FILE = join(homedir(), '.rad-mem', 'silent.log');
 
 /**
  * Write a debug message to silent.log and return fallback value

@@ -56,7 +56,7 @@ They're the most valuable part. Future work will face similar constraints. Knowi
 ## Data Sources
 
 - **Transcript analysis**: `scripts/analyze-power-per-transcript.js`
-- **Memory observations**: SQLite database at `~/.claude-mem/claude-mem.db`
+- **Memory observations**: SQLite database at `~/.rad-mem/rad-mem.db`
 - **Session history**: Memory IDs #15359-#15408 from Nov 25, 2025
 
 ## Maintenance

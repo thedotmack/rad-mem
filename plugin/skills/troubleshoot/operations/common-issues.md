@@ -1,6 +1,6 @@
 # Common Issue Resolutions
 
-Quick fixes for frequently encountered claude-mem problems.
+Quick fixes for frequently encountered rad-mem problems.
 
 ## Issue: Nothing is Remembered After `/clear` {#nothing-remembered}
 
@@ -17,17 +17,17 @@ Quick fixes for frequently encountered claude-mem problems.
 **Fix:**
 1. Verify worker is running:
    ```bash
-   pm2 jlist | grep claude-mem-worker
+   pm2 jlist | grep rad-mem-worker
    ```
 
 2. Check database has recent observations:
    ```bash
-   sqlite3 ~/.claude-mem/claude-mem.db "SELECT COUNT(*) FROM observations WHERE created_at > datetime('now', '-1 day');"
+   sqlite3 ~/.rad-mem/rad-mem.db "SELECT COUNT(*) FROM observations WHERE created_at > datetime('now', '-1 day');"
    ```
 
 3. Restart worker and start new session:
    ```bash
-   pm2 restart claude-mem-worker
+   pm2 restart rad-mem-worker
    ```
 
 4. Create a test observation: `/skill version-bump` then cancel
@@ -36,7 +36,7 @@ Quick fixes for frequently encountered claude-mem problems.
    ```bash
    open http://127.0.0.1:37777
    # Or manually check database:
-   sqlite3 ~/.claude-mem/claude-mem.db "SELECT * FROM observations ORDER BY created_at DESC LIMIT 1;"
+   sqlite3 ~/.rad-mem/rad-mem.db "SELECT * FROM observations ORDER BY created_at DESC LIMIT 1;"
    ```
 
 ## Issue: Viewer Empty After Every Claude Restart {#viewer-empty}
@@ -54,19 +54,19 @@ Quick fixes for frequently encountered claude-mem problems.
 **Fix:**
 1. Check database file exists and has data:
    ```bash
-   ls -lh ~/.claude-mem/claude-mem.db
-   sqlite3 ~/.claude-mem/claude-mem.db "SELECT COUNT(*) FROM observations;"
+   ls -lh ~/.rad-mem/rad-mem.db
+   sqlite3 ~/.rad-mem/rad-mem.db "SELECT COUNT(*) FROM observations;"
    ```
 
 2. Check file permissions:
    ```bash
-   ls -la ~/.claude-mem/claude-mem.db
+   ls -la ~/.rad-mem/rad-mem.db
    # Should be readable/writable by your user
    ```
 
 3. Verify worker is using correct database path in logs:
    ```bash
-   pm2 logs claude-mem-worker --lines 50 --nostream | grep "Database"
+   pm2 logs rad-mem-worker --lines 50 --nostream | grep "Database"
    ```
 
 4. Test viewer connection manually:
@@ -101,7 +101,7 @@ Quick fixes for frequently encountered claude-mem problems.
 
 3. Check database for actual observation dates:
    ```bash
-   sqlite3 ~/.claude-mem/claude-mem.db "SELECT created_at, project, title FROM observations ORDER BY created_at DESC LIMIT 10;"
+   sqlite3 ~/.rad-mem/rad-mem.db "SELECT created_at, project, title FROM observations ORDER BY created_at DESC LIMIT 10;"
    ```
 
 4. Consider filtering by project if working on multiple codebases
@@ -128,8 +128,8 @@ Quick fixes for frequently encountered claude-mem problems.
 
 2. If port in use, change it:
    ```bash
-   mkdir -p ~/.claude-mem
-   echo '{"env":{"CLAUDE_MEM_WORKER_PORT":"37778"}}' > ~/.claude-mem/settings.json
+   mkdir -p ~/.rad-mem
+   echo '{"env":{"CLAUDE_MEM_WORKER_PORT":"37778"}}' > ~/.rad-mem/settings.json
    ```
 
 3. If dependencies missing:
@@ -154,12 +154,12 @@ Quick fixes for frequently encountered claude-mem problems.
 **Fix:**
 1. Check if observations exist in database:
    ```bash
-   sqlite3 ~/.claude-mem/claude-mem.db "SELECT COUNT(*) FROM observations;"
+   sqlite3 ~/.rad-mem/rad-mem.db "SELECT COUNT(*) FROM observations;"
    ```
 
 2. Check FTS5 table sync:
    ```bash
-   sqlite3 ~/.claude-mem/claude-mem.db "SELECT COUNT(*) FROM observations_fts;"
+   sqlite3 ~/.rad-mem/rad-mem.db "SELECT COUNT(*) FROM observations_fts;"
    # Should match observation count
    ```
 
@@ -170,7 +170,7 @@ Quick fixes for frequently encountered claude-mem problems.
 
 4. If FTS5 out of sync, restart worker (triggers reindex):
    ```bash
-   pm2 restart claude-mem-worker
+   pm2 restart rad-mem-worker
    ```
 
 ## Issue: Port Conflicts
@@ -186,11 +186,11 @@ Quick fixes for frequently encountered claude-mem problems.
    lsof -i :37777
    ```
 
-2. Either kill the conflicting process or change claude-mem port:
+2. Either kill the conflicting process or change rad-mem port:
    ```bash
-   mkdir -p ~/.claude-mem
-   echo '{"env":{"CLAUDE_MEM_WORKER_PORT":"37778"}}' > ~/.claude-mem/settings.json
-   pm2 restart claude-mem-worker
+   mkdir -p ~/.rad-mem
+   echo '{"env":{"CLAUDE_MEM_WORKER_PORT":"37778"}}' > ~/.rad-mem/settings.json
+   pm2 restart rad-mem-worker
    ```
 
 ## Issue: Database Corrupted
@@ -203,24 +203,24 @@ Quick fixes for frequently encountered claude-mem problems.
 **Fix:**
 1. Backup the database:
    ```bash
-   cp ~/.claude-mem/claude-mem.db ~/.claude-mem/claude-mem.db.backup
+   cp ~/.rad-mem/rad-mem.db ~/.rad-mem/rad-mem.db.backup
    ```
 
 2. Try to repair:
    ```bash
-   sqlite3 ~/.claude-mem/claude-mem.db "PRAGMA integrity_check;"
+   sqlite3 ~/.rad-mem/rad-mem.db "PRAGMA integrity_check;"
    ```
 
 3. If repair fails, recreate (loses data):
    ```bash
-   rm ~/.claude-mem/claude-mem.db
-   pm2 restart claude-mem-worker
+   rm ~/.rad-mem/rad-mem.db
+   pm2 restart rad-mem-worker
    # Worker will create new database
    ```
 
 ## Prevention Tips
 
-**Keep claude-mem healthy:**
+**Keep rad-mem healthy:**
 - Regularly check viewer UI to see if observations are being captured
 - Monitor database size (shouldn't grow unbounded)
 - Update plugin when new versions are released

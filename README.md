@@ -1,10 +1,10 @@
 <h1 align="center">
   <br>
-  <a href="https://github.com/thedotmack/claude-mem">
+  <a href="https://github.com/thedotmack/rad-mem">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/thedotmack/claude-mem/main/docs/public/claude-mem-logo-for-dark-mode.webp">
-      <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/thedotmack/claude-mem/main/docs/public/claude-mem-logo-for-light-mode.webp">
-      <img src="https://raw.githubusercontent.com/thedotmack/claude-mem/main/docs/public/claude-mem-logo-for-light-mode.webp" alt="Claude-Mem" width="400">
+      <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/thedotmack/rad-mem/main/docs/public/rad-mem-logo-for-dark-mode.webp">
+      <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/thedotmack/rad-mem/main/docs/public/rad-mem-logo-for-light-mode.webp">
+      <img src="https://raw.githubusercontent.com/thedotmack/rad-mem/main/docs/public/rad-mem-logo-for-light-mode.webp" alt="Rad-Mem" width="400">
     </picture>
   </a>
   <br>
@@ -30,9 +30,9 @@
 <br>
 
 <p align="center">
-  <a href="https://github.com/thedotmack/claude-mem">
+  <a href="https://github.com/thedotmack/rad-mem">
     <picture>
-      <img src="https://raw.githubusercontent.com/thedotmack/claude-mem/main/docs/public/cm-preview.gif" alt="Claude-Mem Preview" width="800">
+      <img src="https://raw.githubusercontent.com/thedotmack/rad-mem/main/docs/public/cm-preview.gif" alt="Rad-Mem Preview" width="800">
     </picture>
   </a>
 </p>
@@ -48,7 +48,7 @@
 </p>
 
 <p align="center">
-  Claude-Mem seamlessly preserves context across sessions by automatically capturing tool usage observations, generating semantic summaries, and making them available to future sessions. This enables Claude to maintain continuity of knowledge about projects even after sessions end or reconnect.
+  Rad-Mem seamlessly preserves context across sessions by automatically capturing tool usage observations, generating semantic summaries, and making them available to future sessions. This enables Claude to maintain continuity of knowledge about projects even after sessions end or reconnect.
 </p>
 
 ---
@@ -58,9 +58,9 @@
 Start a new Claude Code session in the terminal and enter the following commands:
 
 ```
-> /plugin marketplace add thedotmack/claude-mem
+> /plugin marketplace add thedotmack/rad-mem
 
-> /plugin install claude-mem
+> /plugin install rad-mem
 ```
 
 Restart Claude Code. Context from previous sessions will automatically appear in new sessions.
@@ -72,7 +72,7 @@ Restart Claude Code. Context from previous sessions will automatically appear in
 - 🔍 **Skill-Based Search** - Query your project history with mem-search skill (~2,250 token savings)
 - 🖥️ **Web Viewer UI** - Real-time memory stream at http://localhost:37777
 - 🤖 **Automatic Operation** - No manual intervention required
-- 🔗 **Citations** - Reference past decisions with `claude-mem://` URIs
+- 🔗 **Citations** - Reference past decisions with `rad-mem://` URIs
 - 🧪 **Beta Channel** - Try experimental features like Endless Mode via version switching
 
 ---
@@ -90,31 +90,31 @@ npx mintlify dev
 
 ### Getting Started
 
-- **[Installation Guide](https://docs.claude-mem.ai/installation)** - Quick start & advanced installation
-- **[Usage Guide](https://docs.claude-mem.ai/usage/getting-started)** - How Claude-Mem works automatically
-- **[Search Tools](https://docs.claude-mem.ai/usage/search-tools)** - Query your project history with natural language
-- **[Beta Features](https://docs.claude-mem.ai/beta-features)** - Try experimental features like Endless Mode
+- **[Installation Guide](https://docs.rad-mem.ai/installation)** - Quick start & advanced installation
+- **[Usage Guide](https://docs.rad-mem.ai/usage/getting-started)** - How Rad-Mem works automatically
+- **[Search Tools](https://docs.rad-mem.ai/usage/search-tools)** - Query your project history with natural language
+- **[Beta Features](https://docs.rad-mem.ai/beta-features)** - Try experimental features like Endless Mode
 
 ### Best Practices
 
-- **[Context Engineering](https://docs.claude-mem.ai/context-engineering)** - AI agent context optimization principles
-- **[Progressive Disclosure](https://docs.claude-mem.ai/progressive-disclosure)** - Philosophy behind Claude-Mem's context priming strategy
+- **[Context Engineering](https://docs.rad-mem.ai/context-engineering)** - AI agent context optimization principles
+- **[Progressive Disclosure](https://docs.rad-mem.ai/progressive-disclosure)** - Philosophy behind Rad-Mem's context priming strategy
 
 ### Architecture
 
-- **[Overview](https://docs.claude-mem.ai/architecture/overview)** - System components & data flow
-- **[Architecture Evolution](https://docs.claude-mem.ai/architecture-evolution)** - The journey from v3 to v5
-- **[Hooks Architecture](https://docs.claude-mem.ai/hooks-architecture)** - How Claude-Mem uses lifecycle hooks
-- **[Hooks Reference](https://docs.claude-mem.ai/architecture/hooks)** - 7 hook scripts explained
-- **[Worker Service](https://docs.claude-mem.ai/architecture/worker-service)** - HTTP API & PM2 management
-- **[Database](https://docs.claude-mem.ai/architecture/database)** - SQLite schema & FTS5 search
-- **[Search Architecture](https://docs.claude-mem.ai/architecture/search-architecture)** - Hybrid search with Chroma vector database
+- **[Overview](https://docs.rad-mem.ai/architecture/overview)** - System components & data flow
+- **[Architecture Evolution](https://docs.rad-mem.ai/architecture-evolution)** - The journey from v3 to v5
+- **[Hooks Architecture](https://docs.rad-mem.ai/hooks-architecture)** - How Rad-Mem uses lifecycle hooks
+- **[Hooks Reference](https://docs.rad-mem.ai/architecture/hooks)** - 7 hook scripts explained
+- **[Worker Service](https://docs.rad-mem.ai/architecture/worker-service)** - HTTP API & PM2 management
+- **[Database](https://docs.rad-mem.ai/architecture/database)** - SQLite schema & FTS5 search
+- **[Search Architecture](https://docs.rad-mem.ai/architecture/search-architecture)** - Hybrid search with Chroma vector database
 
 ### Configuration & Development
 
-- **[Configuration](https://docs.claude-mem.ai/configuration)** - Environment variables & settings
-- **[Development](https://docs.claude-mem.ai/development)** - Building, testing, contributing
-- **[Troubleshooting](https://docs.claude-mem.ai/troubleshooting)** - Common issues & solutions
+- **[Configuration](https://docs.rad-mem.ai/configuration)** - Environment variables & settings
+- **[Development](https://docs.rad-mem.ai/development)** - Building, testing, contributing
+- **[Troubleshooting](https://docs.rad-mem.ai/troubleshooting)** - Common issues & solutions
 
 ---
 
@@ -151,13 +151,13 @@ npx mintlify dev
 5. **mem-search Skill** - Natural language queries with progressive disclosure (~2,250 token savings vs MCP)
 6. **Chroma Vector Database** - Hybrid semantic + keyword search for intelligent context retrieval
 
-See [Architecture Overview](https://docs.claude-mem.ai/architecture/overview) for details.
+See [Architecture Overview](https://docs.rad-mem.ai/architecture/overview) for details.
 
 ---
 
 ## mem-search Skill
 
-Claude-Mem provides intelligent search through the mem-search skill that auto-invokes when you ask about past work:
+Rad-Mem provides intelligent search through the mem-search skill that auto-invokes when you ask about past work:
 
 **How It Works:**
 - Just ask naturally: *"What did we do last session?"* or *"Did we fix this bug before?"*
@@ -187,13 +187,13 @@ Claude-Mem provides intelligent search through the mem-search skill that auto-in
 "What was happening when we added the viewer UI?"
 ```
 
-See [Search Tools Guide](https://docs.claude-mem.ai/usage/search-tools) for detailed examples.
+See [Search Tools Guide](https://docs.rad-mem.ai/usage/search-tools) for detailed examples.
 
 ---
 
 ## Beta Features & Endless Mode
 
-Claude-Mem offers a **beta channel** with experimental features. Switch between stable and beta versions directly from the web viewer UI.
+Rad-Mem offers a **beta channel** with experimental features. Switch between stable and beta versions directly from the web viewer UI.
 
 ### How to Try Beta
 
@@ -225,7 +225,7 @@ Archive Memory (Disk):        Full tool outputs preserved for recall
 
 **Caveats**: Adds latency (60-90s per tool for observation generation), still experimental.
 
-See [Beta Features Documentation](https://docs.claude-mem.ai/beta-features) for details.
+See [Beta Features Documentation](https://docs.rad-mem.ai/beta-features) for details.
 
 ---
 
@@ -308,7 +308,7 @@ See [CHANGELOG.md](CHANGELOG.md) for complete version history.
 **Model Selection:**
 
 ```bash
-./claude-mem-settings.sh
+./rad-mem-settings.sh
 ```
 
 **Environment Variables:**
@@ -317,7 +317,7 @@ See [CHANGELOG.md](CHANGELOG.md) for complete version history.
 - `CLAUDE_MEM_WORKER_PORT` - Worker port (default: 37777)
 - `CLAUDE_MEM_DATA_DIR` - Data directory override (dev only)
 
-See [Configuration Guide](https://docs.claude-mem.ai/configuration) for details.
+See [Configuration Guide](https://docs.rad-mem.ai/configuration) for details.
 
 ---
 
@@ -325,8 +325,8 @@ See [Configuration Guide](https://docs.claude-mem.ai/configuration) for details.
 
 ```bash
 # Clone and build
-git clone https://github.com/thedotmack/claude-mem.git
-cd claude-mem
+git clone https://github.com/thedotmack/rad-mem.git
+cd rad-mem
 npm install
 npm run build
 
@@ -340,7 +340,7 @@ npm run worker:start
 npm run worker:logs
 ```
 
-See [Development Guide](https://docs.claude-mem.ai/development) for detailed instructions.
+See [Development Guide](https://docs.rad-mem.ai/development) for detailed instructions.
 
 ---
 
@@ -354,10 +354,10 @@ If you're experiencing issues, describe the problem to Claude and the troublesho
 
 - Worker not starting → `npm run worker:restart`
 - No context appearing → `npm run test:context`
-- Database issues → `sqlite3 ~/.claude-mem/claude-mem.db "PRAGMA integrity_check;"`
+- Database issues → `sqlite3 ~/.rad-mem/rad-mem.db "PRAGMA integrity_check;"`
 - Search not working → Check FTS5 tables exist
 
-See [Troubleshooting Guide](https://docs.claude-mem.ai/troubleshooting) for complete solutions.
+See [Troubleshooting Guide](https://docs.rad-mem.ai/troubleshooting) for complete solutions.
 
 ---
 
@@ -371,7 +371,7 @@ Contributions are welcome! Please:
 4. Update documentation
 5. Submit a Pull Request
 
-See [Development Guide](https://docs.claude-mem.ai/development) for contribution workflow.
+See [Development Guide](https://docs.rad-mem.ai/development) for contribution workflow.
 
 ---
 
@@ -395,8 +395,8 @@ See the [LICENSE](LICENSE) file for full details.
 ## Support
 
 - **Documentation**: [docs/](docs/)
-- **Issues**: [GitHub Issues](https://github.com/thedotmack/claude-mem/issues)
-- **Repository**: [github.com/thedotmack/claude-mem](https://github.com/thedotmack/claude-mem)
+- **Issues**: [GitHub Issues](https://github.com/thedotmack/rad-mem/issues)
+- **Repository**: [github.com/thedotmack/rad-mem](https://github.com/thedotmack/rad-mem)
 - **Author**: Alex Newman ([@thedotmack](https://github.com/thedotmack))
 
 ---

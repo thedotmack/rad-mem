@@ -6,7 +6,7 @@
 
 **Challenge:** How do you observe AI agent behavior, compress it intelligently, and serve it back at the right time - all without slowing down or interfering with the main workflow?
 
-This is the story of how claude-mem evolved from a simple idea to a production-ready system, and the key architectural decisions that made it work.
+This is the story of how rad-mem evolved from a simple idea to a production-ready system, and the key architectural decisions that made it work.
 
 ---
 
@@ -29,11 +29,11 @@ After establishing the solid v4 architecture, v5.x focused on user experience, v
 // Theme context with persistence
 const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState<'light' | 'dark' | 'system'>(() => {
-    return localStorage.getItem('claude-mem-theme') || 'system';
+    return localStorage.getItem('rad-mem-theme') || 'system';
   });
 
   useEffect(() => {
-    localStorage.setItem('claude-mem-theme', theme);
+    localStorage.setItem('rad-mem-theme', theme);
   }, [theme]);
 
   return (
@@ -63,7 +63,7 @@ const PM2_PATH = join(PLUGIN_ROOT, 'node_modules', '.bin', 'pm2');
 execSync(`"${PM2_PATH}" start "${ECOSYSTEM_CONFIG}"`);
 ```
 
-**Impact**: Cross-platform compatibility restored, Windows users can now use claude-mem without issues.
+**Impact**: Cross-platform compatibility restored, Windows users can now use rad-mem without issues.
 
 ### v5.1.0: Web-Based Viewer UI (October 2025)
 
@@ -943,7 +943,7 @@ createObservation({
 ### Step 1: Backup Database
 
 ```bash
-cp ~/.claude-mem/claude-mem.db ~/.claude-mem/claude-mem-v3-backup.db
+cp ~/.rad-mem/rad-mem.db ~/.rad-mem/rad-mem-v3-backup.db
 ```
 
 ### Step 2: Update Plugin
@@ -956,7 +956,7 @@ git pull
 ### Step 3: Update Plugin
 
 ```bash
-/plugin update claude-mem
+/plugin update rad-mem
 ```
 
 **What happens automatically:**

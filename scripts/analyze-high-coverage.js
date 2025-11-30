@@ -15,8 +15,8 @@ import Database from 'better-sqlite3';
 
 const MIN_MATCH_RATE = 0.6;  // 60% coverage required
 const MIN_TOOLS = 10;
-const TRANSCRIPT_DIR = path.join(homedir(), '.claude/projects/-Users-alexnewman-Scripts-claude-mem');
-const DB_PATH = path.join(homedir(), '.claude-mem', 'claude-mem.db');
+const TRANSCRIPT_DIR = path.join(homedir(), '.claude/projects/-Users-alexnewman-Scripts-rad-mem');
+const DB_PATH = path.join(homedir(), '.rad-mem', 'rad-mem.db');
 const TRANSFORMATION_MARKER = '**Key Facts:**';
 
 // Load observation sizes from database

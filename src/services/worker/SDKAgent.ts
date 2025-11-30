@@ -426,7 +426,7 @@ export class SDKAgent {
    */
   private getModelId(): string {
     try {
-      const settingsPath = path.join(homedir(), '.claude-mem', 'settings.json');
+      const settingsPath = path.join(homedir(), '.rad-mem', 'settings.json');
       if (existsSync(settingsPath)) {
         const settings = JSON.parse(readFileSync(settingsPath, 'utf-8'));
         const modelId = settings.env?.CLAUDE_MEM_MODEL;

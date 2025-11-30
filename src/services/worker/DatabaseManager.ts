@@ -28,7 +28,7 @@ export class DatabaseManager {
     this.sessionSearch = new SessionSearch();
 
     // Initialize ChromaSync
-    this.chromaSync = new ChromaSync('claude-mem');
+    this.chromaSync = new ChromaSync('rad-mem');
 
     // Start background backfill (fire-and-forget, with error logging)
     this.chromaSync.ensureBackfilled().catch((error) => {

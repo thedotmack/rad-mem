@@ -5,13 +5,13 @@ description: "Query your project history with natural language"
 
 # mem-search Skill Usage
 
-Once claude-mem is installed as a plugin, you can search your project history using natural language. Claude automatically invokes the mem-search skill when you ask about past work.
+Once rad-mem is installed as a plugin, you can search your project history using natural language. Claude automatically invokes the mem-search skill when you ask about past work.
 
 ## How It Works
 
 **v5.5.0 Enhancement**: The search skill was renamed to "mem-search" for better scope differentiation, with effectiveness increased from 67% to 100% and enhanced concrete triggers (85% vs 44%).
 
-**v5.4.0 Architecture**: Claude-Mem uses a skill-based search architecture instead of MCP tools, saving ~2,250 tokens per session start through progressive disclosure.
+**v5.4.0 Architecture**: Rad-Mem uses a skill-based search architecture instead of MCP tools, saving ~2,250 tokens per session start through progressive disclosure.
 
 **Simple Usage:**
 - Just ask naturally: *"What did we do last session?"*
@@ -246,11 +246,11 @@ authentication for better scalability and stateless design...
 
 ## Citations
 
-All search results include citations using the `claude-mem://` URI scheme:
+All search results include citations using the `rad-mem://` URI scheme:
 
-- `claude-mem://observation/123` - Specific observation
-- `claude-mem://session/abc-456` - Specific session
-- `claude-mem://user-prompt/789` - Specific user prompt
+- `rad-mem://observation/123` - Specific observation
+- `rad-mem://session/abc-456` - Specific session
+- `rad-mem://user-prompt/789` - Specific user prompt
 
 These citations enable referencing specific historical context in your work.
 
@@ -342,7 +342,7 @@ search_sessions with query="[YOUR PROJECT NAME]" and orderBy="date_desc"
 
 1. Check database has data:
    ```bash
-   sqlite3 ~/.claude-mem/claude-mem.db "SELECT COUNT(*) FROM observations;"
+   sqlite3 ~/.rad-mem/rad-mem.db "SELECT COUNT(*) FROM observations;"
    ```
 
 2. Try broader natural language query:

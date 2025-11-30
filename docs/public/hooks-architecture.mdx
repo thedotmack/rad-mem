@@ -1,4 +1,4 @@
-# How Claude-Mem Uses Hooks: A Lifecycle-Driven Architecture
+# How Rad-Mem Uses Hooks: A Lifecycle-Driven Architecture
 
 ## Core Principle
 **Observe the main Claude Code session from the outside, process observations in the background, inject context at the right time.**
@@ -7,7 +7,7 @@
 
 ## The Big Picture
 
-Claude-Mem is fundamentally a **hook-driven system**. Every piece of functionality happens in response to lifecycle events:
+Rad-Mem is fundamentally a **hook-driven system**. Every piece of functionality happens in response to lifecycle events:
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -27,7 +27,7 @@ Claude-Mem is fundamentally a **hook-driven system**. Every piece of functionali
 └─────────────────────────────────────────────────────────┘
 ```
 
-**Key insight:** Claude-Mem doesn't interrupt or modify Claude Code's behavior. It observes from the outside and provides value through lifecycle hooks.
+**Key insight:** Rad-Mem doesn't interrupt or modify Claude Code's behavior. It observes from the outside and provides value through lifecycle hooks.
 
 ---
 
@@ -35,7 +35,7 @@ Claude-Mem is fundamentally a **hook-driven system**. Every piece of functionali
 
 ### The Non-Invasive Requirement
 
-Claude-Mem had several architectural constraints:
+Rad-Mem had several architectural constraints:
 
 1. **Can't modify Claude Code**: It's a closed-source binary
 2. **Must be fast**: Can't slow down the main session
@@ -70,7 +70,7 @@ Claude Code's hook system provides exactly what we need:
 
 ## The Six Hook Scripts + Pre-Hook
 
-Claude-Mem uses 6 lifecycle hook scripts across 5 lifecycle events, plus 1 pre-hook script for dependency management. SessionStart runs 2 hooks in sequence (after the pre-hook script).
+Rad-Mem uses 6 lifecycle hook scripts across 5 lifecycle events, plus 1 pre-hook script for dependency management. SessionStart runs 2 hooks in sequence (after the pre-hook script).
 
 ### Pre-Hook: Smart Install (Before SessionStart)
 
@@ -138,7 +138,7 @@ Claude-Mem uses 6 lifecycle hook scripts across 5 lifecycle events, plus 1 pre-h
 
 **Output format:**
 ```markdown
-# [claude-mem] recent context
+# [rad-mem] recent context
 
 **Legend:** 🎯 session-request | 🔴 gotcha | 🟡 problem-solution ...
 
@@ -187,7 +187,7 @@ Claude-Mem uses 6 lifecycle hook scripts across 5 lifecycle events, plus 1 pre-h
 
 **Output Example:**
 ```
-📝 Claude-Mem Context Loaded
+📝 Rad-Mem Context Loaded
    ℹ️  Note: This appears as stderr but is informational only
 
 [Context details with colors...]
@@ -528,7 +528,7 @@ sequenceDiagram
 // ecosystem.config.cjs
 module.exports = {
   apps: [{
-    name: 'claude-mem-worker',
+    name: 'rad-mem-worker',
     script: './plugin/scripts/worker-service.cjs',
     instances: 1,
     autorestart: true,
@@ -548,13 +548,13 @@ module.exports = {
 pm2 start ecosystem.config.cjs
 
 # Status check
-pm2 status claude-mem-worker
+pm2 status rad-mem-worker
 
 # View logs
-pm2 logs claude-mem-worker
+pm2 logs rad-mem-worker
 
 # Restart
-pm2 restart claude-mem-worker
+pm2 restart rad-mem-worker
 ```
 
 ### Worker HTTP API
@@ -706,10 +706,10 @@ claude --debug
     **Symptoms:** PostToolUse hook runs but observations missing
 
     **Debugging:**
-    1. Check database: `sqlite3 ~/.claude-mem/claude-mem.db "SELECT * FROM observation_queue"`
+    1. Check database: `sqlite3 ~/.rad-mem/rad-mem.db "SELECT * FROM observation_queue"`
     2. Verify session exists: `SELECT * FROM sdk_sessions`
     3. Check worker status: `pm2 status`
-    4. View worker logs: `pm2 logs claude-mem-worker`
+    4. View worker logs: `pm2 logs rad-mem-worker`
   </Accordion>
 </AccordionGroup>
 
@@ -832,7 +832,7 @@ LIMIT 20
 - Session summaries
 
 **Privacy guarantees:**
-- All data stored locally in `~/.claude-mem/claude-mem.db`
+- All data stored locally in `~/.rad-mem/rad-mem.db`
 - No cloud uploads (API calls only for AI compression)
 - SQLite file permissions: user-only read/write
 - No analytics or telemetry
@@ -866,4 +866,4 @@ LIMIT 20
 
 ---
 
-*The hook-driven architecture enables Claude-Mem to be both powerful and invisible. Users never notice the memory system working - it just makes Claude smarter over time.*
+*The hook-driven architecture enables Rad-Mem to be both powerful and invisible. Users never notice the memory system working - it just makes Claude smarter over time.*

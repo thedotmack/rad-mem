@@ -10,21 +10,11 @@ const WORKER_STARTUP_WAIT_MS = 500;
 const WORKER_STARTUP_RETRIES = 10;
 
 /**
- * Get the worker port number
- * Priority: ~/.claude-mem/settings.json > env var > default
+ * Get the RAD server port number
+ * Priority: env var RAD_MEM_PORT > default 38888
  */
 export function getWorkerPort(): number {
-  try {
-    const settingsPath = path.join(homedir(), '.claude-mem', 'settings.json');
-    if (existsSync(settingsPath)) {
-      const settings = JSON.parse(readFileSync(settingsPath, 'utf-8'));
-      const port = parseInt(settings.env?.CLAUDE_MEM_WORKER_PORT, 10);
-      if (!isNaN(port)) return port;
-    }
-  } catch {
-    // Fall through to env var or default
-  }
-  return parseInt(process.env.CLAUDE_MEM_WORKER_PORT || '37777', 10);
+  return parseInt(process.env.RAD_MEM_PORT || '38888', 10);
 }
 
 /**
@@ -96,7 +86,7 @@ export async function ensureWorkerRunning(): Promise<void> {
     throw new Error(
       `Worker service failed to start on port ${port}.\n\n` +
       `Try manually running: pm2 start ecosystem.config.cjs\n` +
-      `Or restart: pm2 restart claude-mem-worker`
+      `Or restart: pm2 restart rad-mem-worker`
     );
   }
 }

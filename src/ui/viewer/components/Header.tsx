@@ -31,18 +31,18 @@ export function Header({
     <div className="header">
       <h1>
         <div style={{ position: 'relative', display: 'inline-block' }}>
-          <img src="claude-mem-logomark.webp" alt="" className={`logomark ${isProcessing ? 'spinning' : ''}`} />
+          <img src="rad-mem-logomark.webp" alt="" className={`logomark ${isProcessing ? 'spinning' : ''}`} />
           {queueDepth > 0 && (
             <div className="queue-bubble">
               {queueDepth}
             </div>
           )}
         </div>
-        <span className="logo-text">claude-mem</span>
+        <span className="logo-text">rad-mem</span>
       </h1>
       <div className="status">
         <a
-          href="https://docs.claude-mem.ai"
+          href="https://docs.rad-mem.ai"
           target="_blank"
           rel="noopener noreferrer"
           title="Documentation"
@@ -62,7 +62,7 @@ export function Header({
           </svg>
         </a>
         <a
-          href="https://github.com/thedotmack/claude-mem/"
+          href="https://github.com/thedotmack/rad-mem/"
           target="_blank"
           rel="noopener noreferrer"
           title="GitHub"

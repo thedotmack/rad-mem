@@ -1,11 +1,11 @@
 ---
 name: version-bump
-description: Manage semantic version updates for claude-mem project. Handles patch, minor, and major version increments following semantic versioning. Updates package.json, marketplace.json, plugin.json, and CLAUDE.md version number (NOT version history). Creates git tags and GitHub releases. Auto-generates CHANGELOG.md from releases.
+description: Manage semantic version updates for rad-mem project. Handles patch, minor, and major version increments following semantic versioning. Updates package.json, marketplace.json, plugin.json, and CLAUDE.md version number (NOT version history). Creates git tags and GitHub releases. Auto-generates CHANGELOG.md from releases.
 ---
 
 # Version Bump Skill
 
-Manage semantic versioning across the claude-mem project with consistent updates to all version-tracked files.
+Manage semantic versioning across the rad-mem project with consistent updates to all version-tracked files.
 
 ## Quick Reference
 

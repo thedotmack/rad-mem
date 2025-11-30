@@ -19,8 +19,8 @@ import Database from 'better-sqlite3';
 
 // Configuration (same as analyze-transformations-smart.js)
 const MAX_TRANSCRIPTS = parseInt(process.env.MAX_TRANSCRIPTS || '20', 10);
-const TRANSCRIPT_DIR = path.join(homedir(), '.claude/projects/-Users-alexnewman-Scripts-claude-mem');
-const DB_PATH = path.join(homedir(), '.claude-mem', 'claude-mem.db');
+const TRANSCRIPT_DIR = path.join(homedir(), '.claude/projects/-Users-alexnewman-Scripts-rad-mem');
+const DB_PATH = path.join(homedir(), '.rad-mem', 'rad-mem.db');
 const TRANSFORMATION_MARKER = '**Key Facts:**';
 
 // Load observation sizes from database (facts-only strategy)

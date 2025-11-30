@@ -1,7 +1,7 @@
 # VS Code Copilot Extension Integration Plan
 
 ## 1. Groundwork
-- Audit existing claude-mem hook scripts (`context-hook`, `user-message-hook`, `new-hook`, `save-hook`, `summary-hook`, `cleanup-hook`) and their worker-service payloads.
+- Audit existing rad-mem hook scripts (`context-hook`, `user-message-hook`, `new-hook`, `save-hook`, `summary-hook`, `cleanup-hook`) and their worker-service payloads.
 - Document REST endpoints, request bodies, and SessionStore schema fields used today so the extension mirrors them exactly.
 - Confirm worker service availability workflow (`ensureWorkerRunning`, port resolution) and decide how extension error reporting will surface issues to Copilot chat users.
 
@@ -28,19 +28,19 @@
 - Ensure telemetry/logging records tool usage for debugging without leaking sensitive data.
 
 ## 6. Chat Orchestration
-- Implement a chat participant based on the sample that maps Copilot threads to claude-mem session IDs stored in turn metadata.
+- Implement a chat participant based on the sample that maps Copilot threads to rad-mem session IDs stored in turn metadata.
 - On conversation start, auto-run `mem_session_init`; before each user prompt, dispatch `mem_user_prompt_log`; when Copilot signals stop, run `mem_summary_finalize` (with fallbacks if the worker is unavailable).
 - Capture tool events emitted by Copilot (file edits, terminal runs) and forward them through `mem_observation_record` with matching payload structure.
 - Handle conversation disposal or model changes by calling `mem_session_cleanup` to mirror `SessionEnd` hooks.
 
 ## 7. Settings and UX
-- Read `.claude-mem/settings.json` overrides (worker port, observation depth) and surface VS Code settings for Copilot-specific toggles (auto-sync enabled, max observations per prompt).
+- Read `.rad-mem/settings.json` overrides (worker port, observation depth) and surface VS Code settings for Copilot-specific toggles (auto-sync enabled, max observations per prompt).
 - Add status bar indicator/commands for worker health, quick restart instructions, and opening the viewer UI (`http://localhost:37777`).
 - Provide inline notifications when the worker is unreachable, including guidance to restart via PM2.
 
 ## 8. Testing and QA
 - Draft manual validation checklist: initial session, prompt logging, observation capture, summary completion, worker-down handling.
-- Add integration tests using `@vscode/test-electron` to simulate chat turns and assert database side effects in a temporary claude-mem data directory.
+- Add integration tests using `@vscode/test-electron` to simulate chat turns and assert database side effects in a temporary rad-mem data directory.
 - Build mocks for worker endpoints to enable unit tests of tool invocation logic without hitting the real service.
 
 ## 9. Release Readiness

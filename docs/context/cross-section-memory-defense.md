@@ -48,7 +48,7 @@ This whitepaper:
 1. Analyzes the September 2025 Anthropic incident as a case study
 2. Identifies session fragmentation as the root vulnerability
 3. Proposes cross-session memory as a defensive architecture
-4. Demonstrates implementation through the claude-mem system
+4. Demonstrates implementation through the rad-mem system
 5. Quantifies dual benefits: security enhancement and compute optimization
 6. Provides enterprise deployment recommendations
 
@@ -213,9 +213,9 @@ When an AI agent maintains persistent memory:
 3. **Temporal Analysis**: The AI detects escalation patterns across time
 4. **Self-Regulation**: The AI can question, refuse, or alert without external prompting
 
-### 4.2 Implementation: The claude-mem Architecture
+### 4.2 Implementation: The rad-mem Architecture
 
-Claude-mem is an open-source persistent memory system designed for Claude Code that demonstrates this defensive architecture. The system has three core components:
+Rad-mem is an open-source persistent memory system designed for Claude Code that demonstrates this defensive architecture. The system has three core components:
 
 #### 4.2.1 Observation Capture (save-hook.ts)
 
@@ -546,7 +546,7 @@ With cross-session memory, context establishment becomes automatic:
 
 ### 6.3 Endless Mode: Extreme Compression
 
-The claude-mem system includes "Endless Mode"—an experimental feature that compresses tool outputs in real-time:
+The rad-mem system includes "Endless Mode"—an experimental feature that compresses tool outputs in real-time:
 
 **Traditional Approach**:
 
@@ -815,7 +815,7 @@ Cross-session persistent memory provides a robust defensive architecture. By mai
 - **Self-regulation** without external monitoring dependencies
 - **Proactive questioning** before executing suspicious operations
 
-The claude-mem implementation demonstrates that this architecture is practical, performant, and production-ready.
+The rad-mem implementation demonstrates that this architecture is practical, performant, and production-ready.
 
 ### 9.4 Economic Alignment Creates Adoption Incentive
 
@@ -864,7 +864,7 @@ The September 2025 attack demonstrated the vulnerability. The solution exists. T
 
 ## Appendix A: Technical Specifications
 
-### Claude-mem Architecture
+### Rad-mem Architecture
 
 **Component**: Observation Capture Hook
 
@@ -886,7 +886,7 @@ The September 2025 attack demonstrated the vulnerability. The solution exists. T
 
 **Component**: SQLite Database
 
-**Location**: `~/.claude-mem/claude-mem.db`
+**Location**: `~/.rad-mem/rad-mem.db`
 
 **Tables**: observations, sessions, session_summaries
 
@@ -896,7 +896,7 @@ The September 2025 attack demonstrated the vulnerability. The solution exists. T
 
 **Component**: Chroma Vector Database
 
-**Location**: `~/.claude-mem/chroma/`
+**Location**: `~/.rad-mem/chroma/`
 
 **Function**: Semantic search via embeddings
 
@@ -926,17 +926,17 @@ The September 2025 attack demonstrated the vulnerability. The solution exists. T
 
 **Fallback**: Graceful timeout preserves full output if compression fails
 
-**Enable**: `CLAUDE_MEM_ENDLESS_MODE=true` in `~/.claude-mem/settings.json`
+**Enable**: `CLAUDE_MEM_ENDLESS_MODE=true` in `~/.rad-mem/settings.json`
 
 ---
 
 ## Appendix B: About This Research
 
-**Author**: Claude-mem development team
+**Author**: Rad-mem development team
 
 **Implementation**: Open-source plugin for Claude Code
 
-**GitHub**: [https://github.com/thedotmack/claude-mem](https://github.com/thedotmack/claude-mem)
+**GitHub**: [https://github.com/thedotmack/rad-mem](https://github.com/thedotmack/rad-mem)
 
 **Version**: 6.0.9 (November 2025)
 
@@ -944,7 +944,7 @@ The September 2025 attack demonstrated the vulnerability. The solution exists. T
 
 **Acknowledgments**: This research builds on Anthropic's public disclosure of the September 2025 AI-orchestrated cyberattack. We thank Anthropic's security team for their transparency in sharing technical details that enabled this analysis.
 
-**Contact**: For questions about this research or claude-mem implementation, please visit the GitHub repository issue tracker.
+**Contact**: For questions about this research or rad-mem implementation, please visit the GitHub repository issue tracker.
 
 ---
 

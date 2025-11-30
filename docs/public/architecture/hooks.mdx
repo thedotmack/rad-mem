@@ -1,11 +1,11 @@
 ---
 title: "Plugin Hooks"
-description: "6 lifecycle hooks that power Claude-Mem"
+description: "6 lifecycle hooks that power Rad-Mem"
 ---
 
 # Plugin Hooks
 
-Claude-Mem integrates with Claude Code through 6 hook scripts across 5 lifecycle events that capture events and inject context. Additionally, a smart-install pre-hook script manages dependencies.
+Rad-Mem integrates with Claude Code through 6 hook scripts across 5 lifecycle events that capture events and inject context. Additionally, a smart-install pre-hook script manages dependencies.
 
 ## Hook Overview
 
@@ -27,7 +27,7 @@ Hooks are configured in `plugin/hooks/hooks.json`:
 
 ```json
 {
-  "description": "Claude-mem memory system hooks",
+  "description": "Rad-mem memory system hooks",
   "hooks": {
     "SessionStart": [{
       "matcher": "startup|clear|compact",
@@ -144,13 +144,13 @@ Hooks are configured in `plugin/hooks/hooks.json`:
 **Behavior**:
 - Shows first-time setup message when node_modules is missing
 - Displays formatted context information with colors
-- Provides tips for using claude-mem effectively
+- Provides tips for using rad-mem effectively
 - Shows link to web viewer UI (http://localhost:37777)
 - Exits with code 3 (informational, not error)
 
 **Output Example**:
 ```
-📝 Claude-Mem Context Loaded
+📝 Rad-Mem Context Loaded
    ℹ️  Note: This appears as stderr but is informational only
 
 [Context details...]

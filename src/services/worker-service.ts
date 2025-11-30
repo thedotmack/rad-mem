@@ -31,6 +31,16 @@ import { PaginationHelper } from './worker/PaginationHelper.js';
 import { SettingsManager } from './worker/SettingsManager.js';
 import { getBranchInfo, switchBranch, pullUpdates, type BranchInfo, type SwitchResult } from './worker/BranchManager.js';
 
+// Tools to skip for observation processing (low value or too frequent)
+// TODO: Move to external config file for easier customization
+const SKIP_TOOLS = new Set([
+  'ListMcpResourcesTool',  // MCP infrastructure
+  'SlashCommand',          // Command invocation (observe what it produces, not the call)
+  'Skill',                 // Skill invocation (observe what it produces, not the call)
+  'TodoWrite',             // Task management meta-tool
+  'AskUserQuestion'        // User interaction, not substantive work
+]);
+
 export class WorkerService {
   private app: express.Application;
   private server: http.Server | null = null;
@@ -144,13 +154,20 @@ export class WorkerService {
     this.app.get('/', this.handleViewerUI.bind(this));
     this.app.get('/stream', this.handleSSEStream.bind(this));
 
-    // Session endpoints
+    // Session endpoints (legacy Claude Code integration)
     this.app.post('/sessions/:sessionDbId/init', this.handleSessionInit.bind(this));
     this.app.post('/sessions/:sessionDbId/observations', this.handleObservations.bind(this));
     this.app.post('/sessions/:sessionDbId/summarize', this.handleSummarize.bind(this));
     this.app.get('/sessions/:sessionDbId/status', this.handleSessionStatus.bind(this));
     this.app.delete('/sessions/:sessionDbId', this.handleSessionDelete.bind(this));
     this.app.post('/sessions/:sessionDbId/complete', this.handleSessionComplete.bind(this));
+
+    // RAD Protocol endpoints (platform-agnostic API)
+    this.app.post('/api/sessions/ensure', this.handleSessionEnsure.bind(this));
+    this.app.get('/api/context/:project', this.handleGetContext.bind(this));
+    this.app.post('/api/observations', this.handleRADObservations.bind(this));
+    this.app.post('/api/sessions/summarize', this.handleRADSummarize.bind(this));
+    this.app.post('/api/sessions/complete', this.handleRADComplete.bind(this));
 
     // Data retrieval
     this.app.get('/api/observations', this.handleGetObservations.bind(this));
@@ -637,6 +654,383 @@ export class WorkerService {
     }
   }
 
+  // ============================================================================
+  // RAD Protocol Handlers
+  // ============================================================================
+
+  /**
+   * Ensure session exists (RAD Protocol)
+   * POST /api/sessions/ensure
+   *
+   * Idempotent session creation + prompt tracking for any platform.
+   * This is the foundation endpoint that other RAD Protocol endpoints use
+   * to resolve agent_session_id → id.
+   */
+  private handleSessionEnsure(req: Request, res: Response): void {
+    try {
+      const { agent_session_id, platform, project, user_prompt } = req.body;
+
+      // Validate required fields
+      if (!agent_session_id) {
+        res.status(400).json({ error: 'agent_session_id is required' });
+        return;
+      }
+      if (!platform) {
+        res.status(400).json({ error: 'platform is required' });
+        return;
+      }
+      if (!project) {
+        res.status(400).json({ error: 'project is required' });
+        return;
+      }
+
+      // Call SessionStore.ensureSession
+      const result = this.dbManager.getSessionStore().ensureSession(
+        agent_session_id,
+        platform,
+        project,
+        user_prompt
+      );
+
+      logger.info('RAD', 'Session ensured', {
+        agent_session_id: agent_session_id.substring(0, 8) + '...',
+        platform,
+        id: result.id,
+        prompt_number: result.prompt_number,
+        created: result.created
+      });
+
+      // Broadcast SSE event if new session or new prompt
+      if (result.created) {
+        this.sseBroadcaster.broadcast({
+          type: 'session_started',
+          sessionDbId: result.id,
+          project
+        });
+      }
+
+      res.json(result);
+    } catch (error) {
+      logger.failure('RAD', 'Session ensure failed', {}, error as Error);
+      res.status(500).json({ error: (error as Error).message });
+    }
+  }
+
+  /**
+   * Get context for a project (RAD Protocol)
+   * GET /api/context/:project
+   *
+   * Returns observations, summaries, and token statistics for context injection.
+   * This is the data endpoint - clients format output however they need.
+   */
+  private handleGetContext(req: Request, res: Response): void {
+    try {
+      const project = req.params.project;
+      const limit = Math.min(parseInt(req.query.limit as string, 10) || 50, 200);
+      const summaryLimit = Math.min(parseInt(req.query.summary_limit as string, 10) || 10, 50);
+
+      const db = this.dbManager.getSessionStore().db;
+
+      // Get recent observations for this project
+      const observations = db.prepare(`
+        SELECT
+          id, sdk_session_id, type, title, subtitle, narrative,
+          facts, concepts, files_read, files_modified, discovery_tokens,
+          created_at, created_at_epoch
+        FROM observations
+        WHERE project = ?
+        ORDER BY created_at_epoch DESC
+        LIMIT ?
+      `).all(project, limit) as any[];
+
+      // Get recent summaries for this project
+      const summaries = db.prepare(`
+        SELECT
+          id, sdk_session_id, request, investigated, learned, completed,
+          next_steps, created_at, created_at_epoch
+        FROM session_summaries
+        WHERE project = ?
+        ORDER BY created_at_epoch DESC
+        LIMIT ?
+      `).all(project, summaryLimit) as any[];
+
+      // Calculate token statistics
+      const CHARS_PER_TOKEN = 4;
+      let readTokens = 0;
+      let workTokens = 0;
+
+      for (const obs of observations) {
+        // Estimate read tokens from observation size
+        const obsSize = (obs.title?.length || 0) +
+                       (obs.subtitle?.length || 0) +
+                       (obs.narrative?.length || 0) +
+                       (obs.facts ? JSON.stringify(obs.facts).length : 0);
+        readTokens += Math.ceil(obsSize / CHARS_PER_TOKEN);
+
+        // Sum discovery tokens (work investment)
+        workTokens += obs.discovery_tokens || 0;
+      }
+
+      const savings = workTokens - readTokens;
+      const savingsPercent = workTokens > 0 ? Math.round((savings / workTokens) * 100) : 0;
+
+      logger.info('RAD', 'Context retrieved', {
+        project,
+        observations: observations.length,
+        summaries: summaries.length,
+        readTokens,
+        workTokens
+      });
+
+      res.json({
+        project,
+        observations,
+        summaries,
+        tokenStats: {
+          readTokens,
+          workTokens,
+          savings,
+          savingsPercent
+        }
+      });
+    } catch (error) {
+      logger.failure('RAD', 'Get context failed', {}, error as Error);
+      res.status(500).json({ error: (error as Error).message });
+    }
+  }
+
+  /**
+   * Accept observations from any platform (RAD Protocol)
+   * POST /api/observations
+   *
+   * Platform-agnostic observation intake. Resolves agent_session_id to internal
+   * session ID, applies tool filtering, and queues for processing.
+   */
+  private handleRADObservations(req: Request, res: Response): void {
+    try {
+      const { agent_session_id, platform, tool_name, tool_input, tool_response, cwd } = req.body;
+
+      // Validate required fields
+      if (!agent_session_id) {
+        res.status(400).json({ error: 'agent_session_id is required' });
+        return;
+      }
+      if (!platform) {
+        res.status(400).json({ error: 'platform is required' });
+        return;
+      }
+      if (!tool_name) {
+        res.status(400).json({ error: 'tool_name is required' });
+        return;
+      }
+
+      // Check if tool should be skipped
+      if (SKIP_TOOLS.has(tool_name)) {
+        logger.debug('RAD', 'Tool skipped', { tool_name });
+        res.json({ status: 'skipped', reason: 'tool_in_skip_list' });
+        return;
+      }
+
+      // Derive project from cwd
+      const project = cwd ? path.basename(cwd) : 'unknown-project';
+
+      // Resolve agent_session_id to internal session ID
+      const sessionResult = this.dbManager.getSessionStore().ensureSession(
+        agent_session_id,
+        platform,
+        project
+      );
+
+      const sessionDbId = sessionResult.id;
+      const promptNumber = sessionResult.prompt_number;
+
+      // Queue the observation for processing
+      this.sessionManager.queueObservation(sessionDbId, {
+        tool_name,
+        tool_input,
+        tool_response,
+        prompt_number: promptNumber,
+        cwd
+      });
+
+      // Ensure SDK agent is running to consume the queue
+      const session = this.sessionManager.getSession(sessionDbId);
+      if (session && !session.generatorPromise) {
+        logger.info('SESSION', 'Generator auto-starting (RAD observation)', {
+          sessionId: sessionDbId,
+          queueDepth: session.pendingMessages.length
+        });
+
+        session.generatorPromise = this.sdkAgent.startSession(session, this)
+          .catch(err => {
+            logger.failure('SDK', 'SDK agent error', { sessionId: sessionDbId }, err);
+          })
+          .finally(() => {
+            logger.info('SESSION', `Generator finished`, { sessionId: sessionDbId });
+            session.generatorPromise = null;
+            this.broadcastProcessingStatus();
+          });
+      }
+
+      // Broadcast activity status
+      this.broadcastProcessingStatus();
+
+      // Broadcast SSE event
+      this.sseBroadcaster.broadcast({
+        type: 'observation_queued',
+        sessionDbId
+      });
+
+      const toolSummary = logger.formatTool(tool_name, tool_input);
+      logger.info('RAD', 'Observation queued', {
+        tool: toolSummary,
+        sessionId: sessionDbId,
+        platform
+      });
+
+      res.json({ status: 'queued', id: sessionDbId, prompt_number: promptNumber });
+    } catch (error) {
+      logger.failure('RAD', 'Observation queuing failed', {}, error as Error);
+      res.status(500).json({ error: (error as Error).message });
+    }
+  }
+
+  /**
+   * Queue summary request from any platform (RAD Protocol)
+   * POST /api/sessions/summarize
+   *
+   * Platform-agnostic summary request. Resolves agent_session_id to internal
+   * session ID and queues the summary generation.
+   */
+  private handleRADSummarize(req: Request, res: Response): void {
+    try {
+      const { agent_session_id, platform, last_user_message, last_assistant_message } = req.body;
+
+      // Validate required fields
+      if (!agent_session_id) {
+        res.status(400).json({ error: 'agent_session_id is required' });
+        return;
+      }
+      if (!platform) {
+        res.status(400).json({ error: 'platform is required' });
+        return;
+      }
+
+      // Look up existing session (don't increment prompt counter for summarize)
+      const db = this.dbManager.getSessionStore().db;
+      const sessionRow = db.prepare(`
+        SELECT id, project FROM sdk_sessions WHERE claude_session_id = ?
+      `).get(agent_session_id) as { id: number; project: string } | undefined;
+
+      if (!sessionRow) {
+        res.status(404).json({ error: 'Session not found. Call /api/sessions/ensure first.' });
+        return;
+      }
+
+      const sessionDbId = sessionRow.id;
+
+      // Queue the summarize request
+      this.sessionManager.queueSummarize(sessionDbId, last_user_message, last_assistant_message);
+
+      // Ensure SDK agent is running to consume the queue
+      const session = this.sessionManager.getSession(sessionDbId);
+      if (session && !session.generatorPromise) {
+        logger.info('SESSION', 'Generator auto-starting (RAD summarize)', {
+          sessionId: sessionDbId,
+          queueDepth: session.pendingMessages.length
+        });
+
+        session.generatorPromise = this.sdkAgent.startSession(session, this)
+          .catch(err => {
+            logger.failure('SDK', 'SDK agent error', { sessionId: sessionDbId }, err);
+          })
+          .finally(() => {
+            logger.info('SESSION', `Generator finished`, { sessionId: sessionDbId });
+            session.generatorPromise = null;
+            this.broadcastProcessingStatus();
+          });
+      }
+
+      // Broadcast activity status
+      this.broadcastProcessingStatus();
+
+      logger.info('RAD', 'Summary queued', {
+        sessionId: sessionDbId,
+        platform
+      });
+
+      res.json({ status: 'queued', id: sessionDbId });
+    } catch (error) {
+      logger.failure('RAD', 'Summary queuing failed', {}, error as Error);
+      res.status(500).json({ error: (error as Error).message });
+    }
+  }
+
+  /**
+   * Mark session complete from any platform (RAD Protocol)
+   * POST /api/sessions/complete
+   *
+   * Platform-agnostic session completion. Resolves agent_session_id to internal
+   * session ID and marks the session as completed.
+   */
+  private async handleRADComplete(req: Request, res: Response): Promise<void> {
+    try {
+      const { agent_session_id, platform, reason } = req.body;
+
+      // Validate required fields
+      if (!agent_session_id) {
+        res.status(400).json({ error: 'agent_session_id is required' });
+        return;
+      }
+      if (!platform) {
+        res.status(400).json({ error: 'platform is required' });
+        return;
+      }
+
+      // Look up existing session
+      const db = this.dbManager.getSessionStore().db;
+      const sessionRow = db.prepare(`
+        SELECT id FROM sdk_sessions WHERE claude_session_id = ?
+      `).get(agent_session_id) as { id: number } | undefined;
+
+      if (!sessionRow) {
+        // Session might not exist if no observations were sent - that's OK
+        logger.debug('RAD', 'Session complete called for unknown session', { agent_session_id });
+        res.json({ success: true, message: 'Session not found (may not have had observations)' });
+        return;
+      }
+
+      const sessionDbId = sessionRow.id;
+
+      // Delete the in-memory session if it exists
+      await this.sessionManager.deleteSession(sessionDbId);
+
+      // Mark session complete in database
+      this.dbManager.markSessionComplete(sessionDbId);
+
+      // Broadcast processing status
+      this.broadcastProcessingStatus();
+
+      // Broadcast SSE event
+      this.sseBroadcaster.broadcast({
+        type: 'session_completed',
+        timestamp: Date.now(),
+        sessionDbId
+      });
+
+      logger.info('RAD', 'Session completed', {
+        sessionId: sessionDbId,
+        platform,
+        reason: reason || 'normal'
+      });
+
+      res.json({ success: true, id: sessionDbId });
+    } catch (error) {
+      logger.failure('RAD', 'Session complete failed', {}, error as Error);
+      res.status(500).json({ success: false, error: (error as Error).message });
+    }
+  }
+
   /**
    * Get paginated observations
    */
@@ -779,7 +1173,7 @@ export class WorkerService {
       const totalSummaries = db.prepare('SELECT COUNT(*) as count FROM session_summaries').get() as { count: number };
 
       // Get database file size and path
-      const dbPath = path.join(homedir(), '.claude-mem', 'claude-mem.db');
+      const dbPath = path.join(homedir(), '.rad-mem', 'rad-mem.db');
       let dbSize = 0;
       if (existsSync(dbPath)) {
         dbSize = statSync(dbPath).size;
@@ -1381,7 +1775,7 @@ export class WorkerService {
    */
   private handleSearchHelp(req: Request, res: Response): void {
     res.json({
-      title: 'Claude-Mem Search API',
+      title: 'Rad-Mem Search API',
       description: 'HTTP API for searching persistent memory',
       endpoints: [
         {
@@ -1490,7 +1884,7 @@ export class WorkerService {
       examples: [
         'curl "http://localhost:37777/api/search/observations?query=authentication&format=index&limit=5"',
         'curl "http://localhost:37777/api/search/by-type?type=bugfix&limit=10"',
-        'curl "http://localhost:37777/api/context/recent?project=claude-mem&limit=3"',
+        'curl "http://localhost:37777/api/context/recent?project=rad-mem&limit=3"',
         'curl "http://localhost:37777/api/context/timeline?anchor=123&depth_before=5&depth_after=5"'
       ]
     });

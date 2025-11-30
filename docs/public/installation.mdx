@@ -1,17 +1,17 @@
 ---
 title: "Installation"
-description: "Install Claude-Mem plugin for persistent memory across sessions"
+description: "Install Rad-Mem plugin for persistent memory across sessions"
 ---
 
 # Installation Guide
 
 ## Quick Start
 
-Install Claude-Mem directly from the plugin marketplace:
+Install Rad-Mem directly from the plugin marketplace:
 
 ```bash
-/plugin marketplace add thedotmack/claude-mem
-/plugin install claude-mem
+/plugin marketplace add thedotmack/rad-mem
+/plugin install rad-mem
 ```
 
 That's it! The plugin will automatically:
@@ -38,8 +38,8 @@ For development or testing, you can clone and build from source:
 
 ```bash
 # Clone the repository
-git clone https://github.com/thedotmack/claude-mem.git
-cd claude-mem
+git clone https://github.com/thedotmack/rad-mem.git
+cd rad-mem
 
 # Install dependencies
 npm install
@@ -71,7 +71,7 @@ cat plugin/hooks/hooks.json
 #### 3. Data Directory Location
 
 v4.0.0+ stores data in `${CLAUDE_PLUGIN_ROOT}/data/`:
-- Database: `${CLAUDE_PLUGIN_ROOT}/data/claude-mem.db`
+- Database: `${CLAUDE_PLUGIN_ROOT}/data/rad-mem.db`
 - Worker port file: `${CLAUDE_PLUGIN_ROOT}/data/worker.port`
 - Logs: `${CLAUDE_PLUGIN_ROOT}/data/logs/`
 
@@ -98,16 +98,16 @@ npm run test:context
 
 v4.0.0 introduces breaking changes:
 
-- **Data Location Changed**: Database moved from `~/.claude-mem/` to `${CLAUDE_PLUGIN_ROOT}/data/` (inside plugin directory)
+- **Data Location Changed**: Database moved from `~/.rad-mem/` to `${CLAUDE_PLUGIN_ROOT}/data/` (inside plugin directory)
 - **Fresh Start Required**: No automatic migration from v3.x. You must start with a clean database
 - **Worker Auto-Starts**: Worker service now starts automatically - no manual `npm run worker:start` needed
 - **MCP Search Server**: 7 new search tools with full-text search and citations
 - **Enhanced Architecture**: Improved plugin integration and data organization
 
-See [CHANGELOG](https://github.com/thedotmack/claude-mem/blob/main/CHANGELOG.md) for complete details.
+See [CHANGELOG](https://github.com/thedotmack/rad-mem/blob/main/CHANGELOG.md) for complete details.
 
 ## Next Steps
 
-- [Getting Started Guide](usage/getting-started) - Learn how Claude-Mem works automatically
+- [Getting Started Guide](usage/getting-started) - Learn how Rad-Mem works automatically
 - [MCP Search Tools](usage/search-tools) - Query your project history
-- [Configuration](configuration) - Customize Claude-Mem behavior
+- [Configuration](configuration) - Customize Rad-Mem behavior

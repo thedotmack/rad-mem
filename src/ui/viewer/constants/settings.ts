@@ -1,5 +1,5 @@
 /**
- * Default settings values for Claude Memory
+ * Default settings values for Rad Memory
  * Shared across UI components and hooks
  */
 export const DEFAULT_SETTINGS = {

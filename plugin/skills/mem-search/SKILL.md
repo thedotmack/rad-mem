@@ -1,6 +1,6 @@
 ---
 name: mem-search
-description: Search claude-mem's persistent cross-session memory database. Use when user asks "did we already solve this?", "how did we do X last time?", or needs work from previous sessions.
+description: Search rad-mem's persistent cross-session memory database. Use when user asks "did we already solve this?", "how did we do X last time?", or needs work from previous sessions.
 ---
 
 # Memory Search

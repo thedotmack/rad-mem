@@ -55,7 +55,7 @@ To update, restart Claude Code or run the plugin installer.
 
 **Problem:**
 - Observations and summaries created with empty project names
-- Context-hook couldn't find recent context (queries `WHERE project = 'claude-mem'`)
+- Context-hook couldn't find recent context (queries `WHERE project = 'rad-mem'`)
 - Users saw no observations or summaries in SessionStart since Nov 22
 
 **Root Causes:**
@@ -130,9 +130,9 @@ npm run sync-marketplace
 ## Bug Fixes
 
 ### Dynamic Project Name Detection (#142)
-- Fixed hardcoded "claude-mem" project name in ChromaSync and search-server
+- Fixed hardcoded "rad-mem" project name in ChromaSync and search-server
 - Now uses `getCurrentProjectName()` to dynamically detect the project based on working directory
-- Resolves #140 where all observations were incorrectly tagged with "claude-mem"
+- Resolves #140 where all observations were incorrectly tagged with "rad-mem"
 
 ### Viewer UI Scrolling
 - Simplified overflow CSS to enable proper scrolling in viewer UI
@@ -167,7 +167,7 @@ Makes the viewer usable on phones and narrow browser windows.
 Added a real-time queue depth indicator to the viewer UI that displays the count of active work items (queued + currently processing).
 
 ### Features
-- Visual badge next to claude-mem logo
+- Visual badge next to rad-mem logo
 - Shows count of pending messages + active SDK generators
 - Only displays when queueDepth > 0
 - Subtle pulse animation for visual feedback
@@ -209,7 +209,7 @@ Users will no longer experience issues with the worker starting from the wrong l
 
 ### Verification
 
-Run `pm2 info claude-mem-worker` to verify:
+Run `pm2 info rad-mem-worker` to verify:
 - **exec cwd** should be: `/Users/[username]/.claude/plugins/marketplaces/thedotmack`
 - **script path** should be: `/Users/[username]/.claude/plugins/marketplaces/thedotmack/plugin/scripts/worker-service.cjs`
 
@@ -217,7 +217,7 @@ Run `pm2 info claude-mem-worker` to verify:
 
 ## Critical Hotfix: Database Migration Issue (#121)
 
-This is an emergency hotfix addressing a critical database migration bug that prevented claude-mem from loading for some users.
+This is an emergency hotfix addressing a critical database migration bug that prevented rad-mem from loading for some users.
 
 ### What was fixed
 
@@ -236,12 +236,12 @@ This is an emergency hotfix addressing a critical database migration bug that pr
 
 Option 1 - Manual fix (preserves history):
 ```bash
-sqlite3 ~/.claude-mem/claude-mem.db "ALTER TABLE observations ADD COLUMN discovery_tokens INTEGER DEFAULT 0; ALTER TABLE session_summaries ADD COLUMN discovery_tokens INTEGER DEFAULT 0;"
+sqlite3 ~/.rad-mem/rad-mem.db "ALTER TABLE observations ADD COLUMN discovery_tokens INTEGER DEFAULT 0; ALTER TABLE session_summaries ADD COLUMN discovery_tokens INTEGER DEFAULT 0;"
 ```
 
 Option 2 - Delete and recreate (loses history):
 ```bash
-rm ~/.claude-mem/claude-mem.db
+rm ~/.rad-mem/rad-mem.db
 # Restart Claude Code - database will recreate with correct schema
 ```
 
@@ -255,7 +255,7 @@ Just upgrade to v6.0.7 and the migration will work correctly.
 
 ### Full Changelog
 
-See [CHANGELOG.md](https://github.com/thedotmack/claude-mem/blob/main/CHANGELOG.md) for complete version history.
+See [CHANGELOG.md](https://github.com/thedotmack/rad-mem/blob/main/CHANGELOG.md) for complete version history.
 
 ---
 
@@ -316,7 +316,7 @@ Fixes memory leaks from orphaned uvx/python processes that could accumulate duri
 - Fixed process cleanup in ChromaDB sync operations to prevent orphaned processes
 - Improved resource management for external process spawning
 
-**Full Changelog:** https://github.com/thedotmack/claude-mem/compare/v6.0.3...v6.0.4
+**Full Changelog:** https://github.com/thedotmack/rad-mem/compare/v6.0.3...v6.0.4
 
 ## [6.0.3] - 2025-11-16
 
@@ -329,18 +329,18 @@ Documentation alignment release - merged PR #116 fixing hybrid search architectu
 - Updated technical architecture documentation to reflect hybrid ChromaDB + SQLite + timeline context flow
 - Fixed skill operation guides to accurately describe semantic search capabilities
 
-**Full Changelog**: https://github.com/thedotmack/claude-mem/compare/v6.0.2...v6.0.3
+**Full Changelog**: https://github.com/thedotmack/rad-mem/compare/v6.0.2...v6.0.3
 
 ## [6.0.2] - 2025-11-14
 
 ## Changes
 
-- Updated user message hook with Claude-Mem community discussion link for better user engagement and support
+- Updated user message hook with Rad-Mem community discussion link for better user engagement and support
 
 ## What's Changed
 - Enhanced startup context messaging with community connection information
 
-**Full Changelog**: https://github.com/thedotmack/claude-mem/compare/v6.0.1...v6.0.2
+**Full Changelog**: https://github.com/thedotmack/rad-mem/compare/v6.0.1...v6.0.2
 
 ## [6.0.1] - 2025-11-14
 
@@ -358,7 +358,7 @@ Documentation alignment release - merged PR #116 fixing hybrid search architectu
 - Improved card type differentiation: gold/amber for summaries, purple for prompts, blue/teal for observations
 - Better visual consistency in viewer UI
 
-Full changelog: https://github.com/thedotmack/claude-mem/compare/v6.0.0...v6.0.1
+Full changelog: https://github.com/thedotmack/rad-mem/compare/v6.0.0...v6.0.1
 
 ## [6.0.0] - 2025-11-13
 
@@ -396,7 +396,7 @@ This is a major version bump due to significant architectural changes in session
 ---
 
 📦 Install via Claude Code: `~/.claude/plugins/marketplaces/thedotmack/`
-📖 Documentation: [CLAUDE.md](https://github.com/thedotmack/claude-mem/blob/main/CLAUDE.md)
+📖 Documentation: [CLAUDE.md](https://github.com/thedotmack/rad-mem/blob/main/CLAUDE.md)
 
 ## [5.5.1] - 2025-11-11
 
@@ -556,7 +556,7 @@ Merged via PR #86
 
 ```bash
 # Update to latest version
-/plugin update claude-mem
+/plugin update rad-mem
 ```
 
 Or restart Claude Code to auto-update.
@@ -569,7 +569,7 @@ Or restart Claude Code to auto-update.
 
 ---
 
-**Full Changelog**: https://github.com/thedotmack/claude-mem/compare/v5.4.1...v5.4.2
+**Full Changelog**: https://github.com/thedotmack/rad-mem/compare/v5.4.1...v5.4.2
 
 ## [5.4.1] - 2025-11-10
 
@@ -649,7 +649,7 @@ Or restart Claude Code to auto-update.
 ### 🗑️ Removed
 
 **MCP Search Server** (deprecated):
-- Removed `claude-mem-search` from plugin/.mcp.json
+- Removed `rad-mem-search` from plugin/.mcp.json
 - Build script no longer compiles search-server.mjs
 - Source file kept for reference: src/servers/search-server.ts
 - All 9 MCP tools replaced by equivalent HTTP API endpoints
@@ -696,21 +696,21 @@ Or restart Claude Code to auto-update.
 ### 📦 Installation
 
 ```bash
-/plugin marketplace add thedotmack/claude-mem
-/plugin install claude-mem
+/plugin marketplace add thedotmack/rad-mem
+/plugin install rad-mem
 ```
 
 Restart Claude Code to start using v5.4.0.
 
 ### 🔗 Resources
 
-- **Documentation**: https://github.com/thedotmack/claude-mem/tree/main/docs
-- **Issues**: https://github.com/thedotmack/claude-mem/issues
-- **CHANGELOG**: https://github.com/thedotmack/claude-mem/blob/main/CHANGELOG.md
+- **Documentation**: https://github.com/thedotmack/rad-mem/tree/main/docs
+- **Issues**: https://github.com/thedotmack/rad-mem/issues
+- **CHANGELOG**: https://github.com/thedotmack/rad-mem/blob/main/CHANGELOG.md
 
 ---
 
-**Full Changelog**: https://github.com/thedotmack/claude-mem/compare/v5.3.0...v5.4.0
+**Full Changelog**: https://github.com/thedotmack/rad-mem/compare/v5.3.0...v5.4.0
 
 ## [5.3.0] - 2025-11-09
 
@@ -749,7 +749,7 @@ Restart Claude Code to start using v5.4.0.
 **Breaking Changes**: None (patch version)
 
 **Improvements**:
-- Added troubleshooting slash command skill for diagnosing claude-mem installation issues
+- Added troubleshooting slash command skill for diagnosing rad-mem installation issues
 - Comprehensive diagnostic workflow covering PM2, worker health, database, dependencies, logs, and viewer UI
 - Automated fix sequences and common issue resolutions
 - Full system diagnostic report generation
@@ -760,7 +760,7 @@ Restart Claude Code to start using v5.4.0.
 - Version bumped to 5.2.3 across all metadata files
 
 **Usage**:
-Run `/skill troubleshoot` or invoke the `troubleshoot` skill to diagnose claude-mem issues.
+Run `/skill troubleshoot` or invoke the `troubleshoot` skill to diagnose rad-mem issues.
 
 The skill provides systematic checks for:
 - PM2 worker status
@@ -1133,7 +1133,7 @@ Updated CLAUDE.md with:
 
 ### 🚀 Getting Started
 
-1. Update claude-mem to v5.1.0
+1. Update rad-mem to v5.1.0
 2. Start a Claude Code session (worker auto-starts)
 3. Open http://localhost:37777 in your browser
 4. Watch your memory stream in real-time!
@@ -1167,7 +1167,7 @@ Built with:
 
 **Breaking Changes**: None (backward compatible MINOR version)
 
-**Full Changelog**: https://github.com/thedotmack/claude-mem/compare/v5.0.3...v5.1.0
+**Full Changelog**: https://github.com/thedotmack/rad-mem/compare/v5.0.3...v5.1.0
 
 ## [5.0.3] - 2025-11-05
 
@@ -1222,12 +1222,12 @@ This release should completely resolve installation issues. The smart installer 
 
 Install via Claude Code marketplace:
 ```bash
-/plugin marketplace add https://raw.githubusercontent.com/thedotmack/claude-mem/main/.claude-plugin/marketplace.json
-/plugin install claude-mem
+/plugin marketplace add https://raw.githubusercontent.com/thedotmack/rad-mem/main/.claude-plugin/marketplace.json
+/plugin install rad-mem
 ```
 
 ## Full Changelog
-[View all changes](https://github.com/thedotmack/claude-mem/compare/v5.0.1...v5.0.2)
+[View all changes](https://github.com/thedotmack/rad-mem/compare/v5.0.1...v5.0.2)
 
 ## [5.0.1] - 2025-11-04
 
@@ -1259,7 +1259,7 @@ Install via Claude Code marketplace:
 
 ---
 
-**Installation**: See [README](https://github.com/thedotmack/claude-mem#readme) for installation instructions.
+**Installation**: See [README](https://github.com/thedotmack/rad-mem#readme) for installation instructions.
 
 ## [5.0.0] - 2025-11-04
 
@@ -1400,17 +1400,17 @@ None (patch version)
 
 ---
 
-**Full Changelog**: https://github.com/thedotmack/claude-mem/compare/v4.3.0...v4.3.1
+**Full Changelog**: https://github.com/thedotmack/rad-mem/compare/v4.3.0...v4.3.1
 
 ## [4.3.0] - 2025-10-25
 
 ## What's Changed
-* feat: Enhanced context hook with session observations and cross-platform improvements by @thedotmack in https://github.com/thedotmack/claude-mem/pull/25
+* feat: Enhanced context hook with session observations and cross-platform improvements by @thedotmack in https://github.com/thedotmack/rad-mem/pull/25
 
 ## New Contributors
-* @thedotmack made their first contribution in https://github.com/thedotmack/claude-mem/pull/25
+* @thedotmack made their first contribution in https://github.com/thedotmack/rad-mem/pull/25
 
-**Full Changelog**: https://github.com/thedotmack/claude-mem/compare/v4.2.11...v4.3.0
+**Full Changelog**: https://github.com/thedotmack/rad-mem/compare/v4.2.11...v4.3.0
 
 ## [4.2.10] - 2025-10-25
 
@@ -1450,15 +1450,15 @@ This release includes the latest updates from the npm package.
 
 ### Installation
 ```bash
-npm install -g claude-mem@3.9.16
+npm install -g rad-mem@3.9.16
 ```
 
 ### Quick Start
 ```bash
-claude-mem install
+rad-mem install
 ```
 
-For full documentation, visit the [README](https://github.com/thedotmack/claude-mem#readme).
+For full documentation, visit the [README](https://github.com/thedotmack/rad-mem#readme).
 
 ## [3.9.14] - 2025-10-04
 
@@ -1468,15 +1468,15 @@ This release includes the latest updates from the npm package.
 
 ### Installation
 ```bash
-npm install -g claude-mem@3.9.14
+npm install -g rad-mem@3.9.14
 ```
 
 ### Quick Start
 ```bash
-claude-mem install
+rad-mem install
 ```
 
-For full documentation, visit the [README](https://github.com/thedotmack/claude-mem#readme).
+For full documentation, visit the [README](https://github.com/thedotmack/rad-mem#readme).
 
 ## [3.9.13] - 2025-10-04
 
@@ -1486,15 +1486,15 @@ This release includes the latest updates from the npm package.
 
 ### Installation
 ```bash
-npm install -g claude-mem@3.9.13
+npm install -g rad-mem@3.9.13
 ```
 
 ### Quick Start
 ```bash
-claude-mem install
+rad-mem install
 ```
 
-For full documentation, visit the [README](https://github.com/thedotmack/claude-mem#readme).
+For full documentation, visit the [README](https://github.com/thedotmack/rad-mem#readme).
 
 ## [3.9.12] - 2025-10-04
 
@@ -1504,15 +1504,15 @@ This release includes the latest updates from the npm package.
 
 ### Installation
 ```bash
-npm install -g claude-mem@3.9.12
+npm install -g rad-mem@3.9.12
 ```
 
 ### Quick Start
 ```bash
-claude-mem install
+rad-mem install
 ```
 
-For full documentation, visit the [README](https://github.com/thedotmack/claude-mem#readme).
+For full documentation, visit the [README](https://github.com/thedotmack/rad-mem#readme).
 
 ## [3.9.11] - 2025-10-04
 
@@ -1522,15 +1522,15 @@ This release includes the latest updates from the npm package.
 
 ### Installation
 ```bash
-npm install -g claude-mem@3.9.11
+npm install -g rad-mem@3.9.11
 ```
 
 ### Quick Start
 ```bash
-claude-mem install
+rad-mem install
 ```
 
-For full documentation, visit the [README](https://github.com/thedotmack/claude-mem#readme).
+For full documentation, visit the [README](https://github.com/thedotmack/rad-mem#readme).
 
 ## [3.9.10] - 2025-10-03
 
@@ -1540,15 +1540,15 @@ This release includes the latest updates from the npm package.
 
 ### Installation
 ```bash
-npm install -g claude-mem@3.9.10
+npm install -g rad-mem@3.9.10
 ```
 
 ### Quick Start
 ```bash
-claude-mem install
+rad-mem install
 ```
 
-For full documentation, visit the [README](https://github.com/thedotmack/claude-mem#readme).
+For full documentation, visit the [README](https://github.com/thedotmack/rad-mem#readme).
 
 ## [3.9.9] - 2025-10-03
 
@@ -1558,15 +1558,15 @@ This release includes the latest updates from the npm package.
 
 ### Installation
 ```bash
-npm install -g claude-mem@3.9.9
+npm install -g rad-mem@3.9.9
 ```
 
 ### Quick Start
 ```bash
-claude-mem install
+rad-mem install
 ```
 
-For full documentation, visit the [README](https://github.com/thedotmack/claude-mem#readme).
+For full documentation, visit the [README](https://github.com/thedotmack/rad-mem#readme).
 
 ## [3.7.2] - 2025-09-22
 
@@ -1576,15 +1576,15 @@ This release includes the latest updates from the npm package.
 
 ### Installation
 ```bash
-npm install -g claude-mem@3.7.2
+npm install -g rad-mem@3.7.2
 ```
 
 ### Quick Start
 ```bash
-claude-mem install
+rad-mem install
 ```
 
-For full documentation, visit the [README](https://github.com/thedotmack/claude-mem#readme).
+For full documentation, visit the [README](https://github.com/thedotmack/rad-mem#readme).
 
 ## [3.7.1] - 2025-09-18
 
@@ -1594,15 +1594,15 @@ This release includes the latest updates from the npm package.
 
 ### Installation
 ```bash
-npm install -g claude-mem@3.7.1
+npm install -g rad-mem@3.7.1
 ```
 
 ### Quick Start
 ```bash
-claude-mem install
+rad-mem install
 ```
 
-For full documentation, visit the [README](https://github.com/thedotmack/claude-mem#readme).
+For full documentation, visit the [README](https://github.com/thedotmack/rad-mem#readme).
 
 ## [3.7.0] - 2025-09-18
 
@@ -1612,15 +1612,15 @@ This release includes the latest updates from the npm package.
 
 ### Installation
 ```bash
-npm install -g claude-mem@3.7.0
+npm install -g rad-mem@3.7.0
 ```
 
 ### Quick Start
 ```bash
-claude-mem install
+rad-mem install
 ```
 
-For full documentation, visit the [README](https://github.com/thedotmack/claude-mem#readme).
+For full documentation, visit the [README](https://github.com/thedotmack/rad-mem#readme).
 
 ## [3.6.10] - 2025-09-17
 
@@ -1630,15 +1630,15 @@ This release includes the latest updates from the npm package.
 
 ### Installation
 ```bash
-npm install -g claude-mem@3.6.10
+npm install -g rad-mem@3.6.10
 ```
 
 ### Quick Start
 ```bash
-claude-mem install
+rad-mem install
 ```
 
-For full documentation, visit the [README](https://github.com/thedotmack/claude-mem#readme).
+For full documentation, visit the [README](https://github.com/thedotmack/rad-mem#readme).
 
 ## [3.6.9] - 2025-09-15
 
@@ -1648,15 +1648,15 @@ This release includes the latest updates from the npm package.
 
 ### Installation
 ```bash
-npm install -g claude-mem@3.6.9
+npm install -g rad-mem@3.6.9
 ```
 
 ### Quick Start
 ```bash
-claude-mem install
+rad-mem install
 ```
 
-For full documentation, visit the [README](https://github.com/thedotmack/claude-mem#readme).
+For full documentation, visit the [README](https://github.com/thedotmack/rad-mem#readme).
 
 ## [3.6.8] - 2025-09-14
 
@@ -1666,15 +1666,15 @@ This release includes the latest updates from the npm package.
 
 ### Installation
 ```bash
-npm install -g claude-mem@3.6.8
+npm install -g rad-mem@3.6.8
 ```
 
 ### Quick Start
 ```bash
-claude-mem install
+rad-mem install
 ```
 
-For full documentation, visit the [README](https://github.com/thedotmack/claude-mem#readme).
+For full documentation, visit the [README](https://github.com/thedotmack/rad-mem#readme).
 
 ## [3.6.6] - 2025-09-14
 
@@ -1684,15 +1684,15 @@ This release includes the latest updates from the npm package.
 
 ### Installation
 ```bash
-npm install -g claude-mem@3.6.6
+npm install -g rad-mem@3.6.6
 ```
 
 ### Quick Start
 ```bash
-claude-mem install
+rad-mem install
 ```
 
-For full documentation, visit the [README](https://github.com/thedotmack/claude-mem#readme).
+For full documentation, visit the [README](https://github.com/thedotmack/rad-mem#readme).
 
 ## [3.6.5] - 2025-09-14
 
@@ -1702,15 +1702,15 @@ This release includes the latest updates from the npm package.
 
 ### Installation
 ```bash
-npm install -g claude-mem@3.6.5
+npm install -g rad-mem@3.6.5
 ```
 
 ### Quick Start
 ```bash
-claude-mem install
+rad-mem install
 ```
 
-For full documentation, visit the [README](https://github.com/thedotmack/claude-mem#readme).
+For full documentation, visit the [README](https://github.com/thedotmack/rad-mem#readme).
 
 ## [3.6.4] - 2025-09-14
 
@@ -1720,15 +1720,15 @@ This release includes the latest updates from the npm package.
 
 ### Installation
 ```bash
-npm install -g claude-mem@3.6.4
+npm install -g rad-mem@3.6.4
 ```
 
 ### Quick Start
 ```bash
-claude-mem install
+rad-mem install
 ```
 
-For full documentation, visit the [README](https://github.com/thedotmack/claude-mem#readme).
+For full documentation, visit the [README](https://github.com/thedotmack/rad-mem#readme).
 
 ## [3.6.3] - 2025-09-11
 
@@ -1738,15 +1738,15 @@ This release includes the latest updates from the npm package.
 
 ### Installation
 ```bash
-npm install -g claude-mem@3.6.3
+npm install -g rad-mem@3.6.3
 ```
 
 ### Quick Start
 ```bash
-claude-mem install
+rad-mem install
 ```
 
-For full documentation, visit the [README](https://github.com/thedotmack/claude-mem#readme).
+For full documentation, visit the [README](https://github.com/thedotmack/rad-mem#readme).
 
 ## [3.6.2] - 2025-09-11
 
@@ -1756,15 +1756,15 @@ This release includes the latest updates from the npm package.
 
 ### Installation
 ```bash
-npm install -g claude-mem@3.6.2
+npm install -g rad-mem@3.6.2
 ```
 
 ### Quick Start
 ```bash
-claude-mem install
+rad-mem install
 ```
 
-For full documentation, visit the [README](https://github.com/thedotmack/claude-mem#readme).
+For full documentation, visit the [README](https://github.com/thedotmack/rad-mem#readme).
 
 ## [3.6.1] - 2025-09-10
 
@@ -1774,15 +1774,15 @@ This release includes the latest updates from the npm package.
 
 ### Installation
 ```bash
-npm install -g claude-mem@3.6.1
+npm install -g rad-mem@3.6.1
 ```
 
 ### Quick Start
 ```bash
-claude-mem install
+rad-mem install
 ```
 
-For full documentation, visit the [README](https://github.com/thedotmack/claude-mem#readme).
+For full documentation, visit the [README](https://github.com/thedotmack/rad-mem#readme).
 
 ## [3.6.0] - 2025-09-10
 
@@ -1792,15 +1792,15 @@ This release includes the latest updates from the npm package.
 
 ### Installation
 ```bash
-npm install -g claude-mem@3.6.0
+npm install -g rad-mem@3.6.0
 ```
 
 ### Quick Start
 ```bash
-claude-mem install
+rad-mem install
 ```
 
-For full documentation, visit the [README](https://github.com/thedotmack/claude-mem#readme).
+For full documentation, visit the [README](https://github.com/thedotmack/rad-mem#readme).
 
 ## [3.5.9] - 2025-09-10
 
@@ -1810,15 +1810,15 @@ This release includes the latest updates from the npm package.
 
 ### Installation
 ```bash
-npm install -g claude-mem@3.5.9
+npm install -g rad-mem@3.5.9
 ```
 
 ### Quick Start
 ```bash
-claude-mem install
+rad-mem install
 ```
 
-For full documentation, visit the [README](https://github.com/thedotmack/claude-mem#readme).
+For full documentation, visit the [README](https://github.com/thedotmack/rad-mem#readme).
 
 ## [3.5.8] - 2025-09-10
 
@@ -1828,15 +1828,15 @@ This release includes the latest updates from the npm package.
 
 ### Installation
 ```bash
-npm install -g claude-mem@3.5.8
+npm install -g rad-mem@3.5.8
 ```
 
 ### Quick Start
 ```bash
-claude-mem install
+rad-mem install
 ```
 
-For full documentation, visit the [README](https://github.com/thedotmack/claude-mem#readme).
+For full documentation, visit the [README](https://github.com/thedotmack/rad-mem#readme).
 
 ## [3.5.7] - 2025-09-10
 
@@ -1846,15 +1846,15 @@ This release includes the latest updates from the npm package.
 
 ### Installation
 ```bash
-npm install -g claude-mem@3.5.7
+npm install -g rad-mem@3.5.7
 ```
 
 ### Quick Start
 ```bash
-claude-mem install
+rad-mem install
 ```
 
-For full documentation, visit the [README](https://github.com/thedotmack/claude-mem#readme).
+For full documentation, visit the [README](https://github.com/thedotmack/rad-mem#readme).
 
 ## [3.5.6] - 2025-09-09
 
@@ -1864,15 +1864,15 @@ This release includes the latest updates from the npm package.
 
 ### Installation
 ```bash
-npm install -g claude-mem@3.5.6
+npm install -g rad-mem@3.5.6
 ```
 
 ### Quick Start
 ```bash
-claude-mem install
+rad-mem install
 ```
 
-For full documentation, visit the [README](https://github.com/thedotmack/claude-mem#readme).
+For full documentation, visit the [README](https://github.com/thedotmack/rad-mem#readme).
 
 ## [3.5.5] - 2025-09-09
 
@@ -1882,24 +1882,24 @@ This release includes the latest updates from the npm package.
 
 ### Installation
 ```bash
-npm install -g claude-mem@3.5.5
+npm install -g rad-mem@3.5.5
 ```
 
 ### Quick Start
 ```bash
-claude-mem install
+rad-mem install
 ```
 
-For full documentation, visit the [README](https://github.com/thedotmack/claude-mem#readme).
+For full documentation, visit the [README](https://github.com/thedotmack/rad-mem#readme).
 
 ## [3.5.4] - 2025-09-09
 
-## 🎉 claude-mem v3.5.4
+## 🎉 rad-mem v3.5.4
 
 ### Installation
 ```bash
-npm install -g claude-mem
-claude-mem install
+npm install -g rad-mem
+rad-mem install
 ```
 
 ### What's New
@@ -1917,7 +1917,7 @@ claude-mem install
 - 🔍 **Powerful Search** - Vector-based semantic search across all memories
 
 ### Files Included
-- `dist/claude-mem.min.js` - Minified CLI executable
+- `dist/rad-mem.min.js` - Minified CLI executable
 - `hooks/` - Claude Code integration hooks
 - `commands/` - Claude Code custom commands
 - `package.json` - Package configuration
@@ -1927,4 +1927,4 @@ claude-mem install
 - Claude Code CLI
 - uv (automatically installed if missing)
 
-For documentation and support, visit the [GitHub repository](https://github.com/thedotmack/claude-mem).
+For documentation and support, visit the [GitHub repository](https://github.com/thedotmack/rad-mem).

@@ -1,5 +1,5 @@
 {
-  "description": "Claude-mem memory system hooks",
+  "description": "Rad-mem memory system hooks",
   "hooks": {
     "SessionStart": [
       {

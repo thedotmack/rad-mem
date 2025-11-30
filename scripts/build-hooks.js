@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Build script for claude-mem hooks
+ * Build script for rad-mem hooks
  * Bundles TypeScript hooks into individual standalone executables using esbuild
  */
 
@@ -32,7 +32,7 @@ const SEARCH_SERVER = {
 };
 
 async function buildHooks() {
-  console.log('🔨 Building claude-mem hooks and worker service...\n');
+  console.log('🔨 Building rad-mem hooks and worker service...\n');
 
   try {
     // Read version from package.json

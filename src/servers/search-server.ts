@@ -1,5 +1,5 @@
 /**
- * Claude-mem MCP Search Server
+ * Rad-mem MCP Search Server
  * Exposes SessionSearch capabilities as MCP tools with search_result formatting
  */
 
@@ -24,7 +24,7 @@ import { silentDebug } from '../utils/silent-debug.js';
 let search: SessionSearch;
 let store: SessionStore;
 let chromaClient: Client | null = null;
-const COLLECTION_NAME = 'cm__claude-mem';
+const COLLECTION_NAME = 'cm__rad-mem';
 
 try {
   search = new SessionSearch();
@@ -145,7 +145,7 @@ function formatObservationIndex(obs: ObservationSearchResult, index: number): st
 
   return `${index + 1}. ${type} ${title}
    Date: ${date}
-   Source: claude-mem://observation/${obs.id}`;
+   Source: rad-mem://observation/${obs.id}`;
 }
 
 /**
@@ -157,7 +157,7 @@ function formatSessionIndex(session: SessionSummarySearchResult, index: number):
 
   return `${index + 1}. ${title}
    Date: ${date}
-   Source: claude-mem://session/${session.sdk_session_id}`;
+   Source: rad-mem://session/${session.sdk_session_id}`;
 }
 
 /**
@@ -169,7 +169,7 @@ function formatObservationResult(obs: ObservationSearchResult): string {
   // Build content from available fields
   const contentParts: string[] = [];
   contentParts.push(`## ${title}`);
-  contentParts.push(`*Source: claude-mem://observation/${obs.id}*`);
+  contentParts.push(`*Source: rad-mem://observation/${obs.id}*`);
   contentParts.push('');
 
   if (obs.subtitle) {
@@ -249,7 +249,7 @@ function formatSessionResult(session: SessionSummarySearchResult): string {
   // Build content from available fields
   const contentParts: string[] = [];
   contentParts.push(`## ${title}`);
-  contentParts.push(`*Source: claude-mem://session/${session.sdk_session_id}*`);
+  contentParts.push(`*Source: rad-mem://session/${session.sdk_session_id}*`);
   contentParts.push('');
 
   if (session.completed) {
@@ -316,7 +316,7 @@ function formatUserPromptIndex(prompt: UserPromptSearchResult, index: number): s
 
   return `${index + 1}. "${prompt.prompt_text}"
    Date: ${date} | Prompt #${prompt.prompt_number}
-   Source: claude-mem://user-prompt/${prompt.id}`;
+   Source: rad-mem://user-prompt/${prompt.id}`;
 }
 
 /**
@@ -325,7 +325,7 @@ function formatUserPromptIndex(prompt: UserPromptSearchResult, index: number): s
 function formatUserPromptResult(prompt: UserPromptSearchResult): string {
   const contentParts: string[] = [];
   contentParts.push(`## User Prompt #${prompt.prompt_number}`);
-  contentParts.push(`*Source: claude-mem://user-prompt/${prompt.id}*`);
+  contentParts.push(`*Source: rad-mem://user-prompt/${prompt.id}*`);
   contentParts.push('');
   contentParts.push(prompt.prompt_text);
   contentParts.push('');
@@ -846,7 +846,7 @@ const tools = [
 
               const sess = item.data;
               const title = sess.request || 'Session summary';
-              const link = `claude-mem://session-summary/${sess.id}`;
+              const link = `rad-mem://session-summary/${sess.id}`;
               const marker = isAnchor ? ' ← **ANCHOR**' : '';
 
               lines.push(`**🎯 #S${sess.id}** ${title} (${formatDateTime(item.epoch)}) [→](${link})${marker}`);
@@ -2145,7 +2145,7 @@ const tools = [
               // Render session
               const sess = item.data;
               const title = sess.request || 'Session summary';
-              const link = `claude-mem://session-summary/${sess.id}`;
+              const link = `rad-mem://session-summary/${sess.id}`;
               const marker = isAnchor ? ' ← **ANCHOR**' : '';
 
               lines.push(`**🎯 #S${sess.id}** ${title} (${formatDateTime(item.epoch)}) [→](${link})${marker}`);
@@ -2314,7 +2314,7 @@ const tools = [
             if (obs.subtitle) {
               lines.push(`   - ${obs.subtitle}`);
             }
-            lines.push(`   - Source: claude-mem://observation/${obs.id}`);
+            lines.push(`   - Source: rad-mem://observation/${obs.id}`);
             lines.push('');
           }
 
@@ -2451,7 +2451,7 @@ const tools = [
                 // Render session
                 const sess = item.data;
                 const title = sess.request || 'Session summary';
-                const link = `claude-mem://session-summary/${sess.id}`;
+                const link = `rad-mem://session-summary/${sess.id}`;
 
                 lines.push(`**🎯 #S${sess.id}** ${title} (${formatDateTime(item.epoch)}) [→](${link})`);
                 lines.push('');
@@ -2548,7 +2548,7 @@ const tools = [
  */
 const server = new Server(
   {
-    name: 'claude-mem-search',
+    name: 'rad-mem-search',
     version: '1.0.0',
   },
   {
@@ -2636,7 +2636,7 @@ async function main() {
   // Start the MCP server FIRST (critical - must start before blocking operations)
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error('[search-server] Claude-mem search server started');
+  console.error('[search-server] Rad-mem search server started');
 
   // Initialize Chroma client in background (non-blocking)
   setTimeout(async () => {
@@ -2649,7 +2649,7 @@ async function main() {
       });
 
       const client = new Client({
-        name: 'claude-mem-search-chroma-client',
+        name: 'rad-mem-search-chroma-client',
         version: '1.0.0'
       }, {
         capabilities: {}
