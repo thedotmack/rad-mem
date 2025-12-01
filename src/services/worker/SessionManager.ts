@@ -56,8 +56,8 @@ export class SessionManager {
         silentDebug('[SessionManager] Updating userPrompt for continuation', {
           sessionDbId,
           promptNumber,
-          oldPrompt: session.userPrompt.substring(0, 80),
-          newPrompt: currentUserPrompt.substring(0, 80)
+          oldPrompt: session.userPrompt?.substring(0, 80) || '(none)',
+          newPrompt: currentUserPrompt?.substring(0, 80) || '(none)'
         });
         session.userPrompt = currentUserPrompt;
         session.lastPromptNumber = promptNumber || session.lastPromptNumber;
@@ -65,7 +65,7 @@ export class SessionManager {
         silentDebug('[SessionManager] No currentUserPrompt provided for existing session', {
           sessionDbId,
           promptNumber,
-          usingCachedPrompt: session.userPrompt.substring(0, 80)
+          usingCachedPrompt: session.userPrompt?.substring(0, 80) || '(none)'
         });
       }
       return session;
@@ -81,13 +81,13 @@ export class SessionManager {
       silentDebug('[SessionManager] No currentUserPrompt provided for new session, using database', {
         sessionDbId,
         promptNumber,
-        dbPrompt: dbSession.user_prompt.substring(0, 80)
+        dbPrompt: dbSession.user_prompt?.substring(0, 80) || '(none)'
       });
     } else {
       silentDebug('[SessionManager] Initializing session with fresh userPrompt', {
         sessionDbId,
         promptNumber,
-        userPrompt: currentUserPrompt.substring(0, 80)
+        userPrompt: currentUserPrompt?.substring(0, 80) || '(none)'
       });
     }
 

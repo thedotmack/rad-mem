@@ -331,7 +331,7 @@ async function importTranscript(transcriptPath: string): Promise<void> {
     return;
   }
 
-  // Submit observations
+  // Submit observations with delay to simulate live session
   let queued = 0;
   let skipped = 0;
 
@@ -345,6 +345,9 @@ async function importTranscript(transcriptPath: string): Promise<void> {
     process.stdout.write(
       `\rProcessed: ${queued + skipped}/${executions.length} (${queued} queued, ${skipped} skipped)`
     );
+
+    // Pause 100ms between submissions to let SDK agent process
+    await new Promise(resolve => setTimeout(resolve, 100));
   }
 
   console.log('\n');
