@@ -5,7 +5,7 @@ This document provides detailed citations for the decisions mentioned in the End
 All decisions are queryable via the API:
 
 ```bash
-curl "localhost:37777/api/decisions?query=endless+mode"
+curl "localhost:38888/api/decisions?query=endless+mode"
 ```
 
 ---
@@ -192,16 +192,16 @@ curl "localhost:37777/api/decisions?query=endless+mode"
 
 ```bash
 # Get all endless mode decisions
-curl "localhost:37777/api/decisions?query=endless+mode"
+curl "localhost:38888/api/decisions?query=endless+mode"
 
 # Search for specific topics
-curl "localhost:37777/api/search?query=synchronous+transformation+90+second&format=full"
+curl "localhost:38888/api/search?query=synchronous+transformation+90+second&format=full"
 
 # Get the hanging/disabled decisions
-curl "localhost:37777/api/decisions?query=disabled+hanging"
+curl "localhost:38888/api/decisions?query=disabled+hanging"
 
 # Get the beta branch strategy
-curl "localhost:37777/api/decisions?query=beta+branch+strategy"
+curl "localhost:38888/api/decisions?query=beta+branch+strategy"
 ```
 
 ---

@@ -109,7 +109,7 @@ app.get('/api/events', (req, res) => {
 });
 
 // Dashboard subscription
-const eventSource = new EventSource('http://localhost:37777/api/events');
+const eventSource = new EventSource('http://localhost:38888/api/events');
 eventSource.onmessage = (event) => {
   const data = JSON.parse(event.data);
   updateDashboard(data);
@@ -1814,7 +1814,7 @@ async function exportData(
 import { RADClient } from '@rad-mem/client';
 
 const rad = new RADClient({
-  baseUrl: 'http://localhost:37777',
+  baseUrl: 'http://localhost:38888',
   apiKey: process.env.RAD_API_KEY
 });
 

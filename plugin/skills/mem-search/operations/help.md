@@ -12,7 +12,7 @@ Get comprehensive API documentation for all search endpoints.
 ## Command
 
 ```bash
-curl -s "http://localhost:37777/api/help"
+curl -s "http://localhost:38888/api/help"
 ```
 
 ## Response Structure
@@ -22,7 +22,7 @@ Returns complete API documentation:
 ```json
 {
   "version": "5.4.0",
-  "base_url": "http://localhost:37777/api",
+  "base_url": "http://localhost:38888/api",
   "endpoints": [
     {
       "path": "/search/observations",
@@ -44,7 +44,7 @@ Returns complete API documentation:
           "description": "Response format"
         }
       ],
-      "example": "curl -s \"http://localhost:37777/api/search/observations?query=authentication&format=index&limit=5\""
+      "example": "curl -s \"http://localhost:38888/api/search/observations?query=authentication&format=index&limit=5\""
     }
   ]
 }
@@ -57,7 +57,7 @@ Present as reference documentation:
 ```markdown
 ## rad-mem Search API Reference (v5.4.0)
 
-Base URL: `http://localhost:37777/api`
+Base URL: `http://localhost:38888/api`
 
 ### Search Operations
 
@@ -70,7 +70,7 @@ Base URL: `http://localhost:37777/api`
   - `limit` (optional, number): Max results (default: 20, max: 100)
 - **Example:**
   ```bash
-  curl -s "http://localhost:37777/api/search/observations?query=authentication&format=index&limit=5"
+  curl -s "http://localhost:38888/api/search/observations?query=authentication&format=index&limit=5"
   ```
 
 [... continue for all endpoints ...]

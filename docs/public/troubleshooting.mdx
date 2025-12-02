@@ -25,20 +25,20 @@ The skill includes comprehensive diagnostics, automated repair sequences, and de
 
 ### Viewer UI Not Loading
 
-**Symptoms**: Cannot access http://localhost:37777, page doesn't load, or shows connection error.
+**Symptoms**: Cannot access http://localhost:38888, page doesn't load, or shows connection error.
 
 **Solutions**:
 
 1. Check if worker is running on port 37777:
    ```bash
-   lsof -i :37777
+   lsof -i :38888
    # or
    npm run worker:status
    ```
 
 2. Verify worker is healthy:
    ```bash
-   curl http://localhost:37777/health
+   curl http://localhost:38888/health
    ```
 
 3. Check worker logs for errors:
@@ -72,7 +72,7 @@ The skill includes comprehensive diagnostics, automated repair sequences, and de
 
 2. Verify settings endpoint is working:
    ```bash
-   curl http://localhost:37777/api/settings
+   curl http://localhost:38888/api/settings
    ```
 
 3. Clear localStorage and try again:
@@ -91,7 +91,7 @@ The skill includes comprehensive diagnostics, automated repair sequences, and de
 
 1. Check SSE endpoint is accessible:
    ```bash
-   curl -N http://localhost:37777/stream
+   curl -N http://localhost:38888/stream
    ```
 
 2. Check browser console for errors:
@@ -235,12 +235,12 @@ The skill includes comprehensive diagnostics, automated repair sequences, and de
 
 1. Check if port 37777 is in use:
    ```bash
-   lsof -i :37777
+   lsof -i :38888
    ```
 
 2. Kill process using the port:
    ```bash
-   kill -9 $(lsof -t -i:37777)
+   kill -9 $(lsof -t -i:38888)
    ```
 
 3. Or use a different port:
@@ -782,7 +782,7 @@ pm2 logs rad-mem-worker
 cat ~/.rad-mem/worker.port
 
 # Test worker health
-curl http://localhost:37777/health
+curl http://localhost:38888/health
 ```
 
 ### Database Inspection

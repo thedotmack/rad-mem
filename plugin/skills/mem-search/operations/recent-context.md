@@ -12,7 +12,7 @@ Get recent session summaries and observations for a project.
 ## Command
 
 ```bash
-curl -s "http://localhost:37777/api/context/recent?project=api-server&limit=3"
+curl -s "http://localhost:38888/api/context/recent?project=api-server&limit=3"
 ```
 
 ## Parameters
@@ -81,7 +81,7 @@ If no project parameter is provided, uses current working directory:
 
 ```bash
 # Auto-detects project from current directory
-curl -s "http://localhost:37777/api/context/recent?limit=3"
+curl -s "http://localhost:38888/api/context/recent?limit=3"
 ```
 
 ## Error Handling

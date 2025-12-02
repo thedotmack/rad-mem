@@ -53,7 +53,7 @@ The worker exposes a health endpoint at `/health`:
 
 ```bash
 # Check health (default port)
-curl -s http://127.0.0.1:37777/health
+curl -s http://127.0.0.1:38888/health
 
 # With custom port
 PORT=$(grep CLAUDE_MEM_WORKER_PORT ~/.rad-mem/settings.json | grep -o '[0-9]\+' || echo "37777")
@@ -194,7 +194,7 @@ pm2 delete rad-mem-worker
 
 4. **Check port availability:**
    ```bash
-   lsof -i :37777
+   lsof -i :38888
    ```
    If port in use, either kill that process or change rad-mem port.
 
@@ -290,19 +290,19 @@ Once worker is running, test all endpoints:
 
 ```bash
 # Health check
-curl -s http://127.0.0.1:37777/health
+curl -s http://127.0.0.1:38888/health
 
 # Viewer HTML
-curl -s http://127.0.0.1:37777/ | head -20
+curl -s http://127.0.0.1:38888/ | head -20
 
 # Stats API
-curl -s http://127.0.0.1:37777/api/stats
+curl -s http://127.0.0.1:38888/api/stats
 
 # Search API
-curl -s "http://127.0.0.1:37777/api/search/observations?q=test&format=index"
+curl -s "http://127.0.0.1:38888/api/search/observations?q=test&format=index"
 
 # Prompts API
-curl -s "http://127.0.0.1:37777/api/prompts?limit=5"
+curl -s "http://127.0.0.1:38888/api/prompts?limit=5"
 ```
 
 All should return appropriate responses (HTML for viewer, JSON for APIs).

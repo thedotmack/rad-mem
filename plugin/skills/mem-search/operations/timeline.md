@@ -13,13 +13,13 @@ Get a chronological timeline of observations, sessions, and prompts around a spe
 
 ```bash
 # Using observation ID as anchor
-curl -s "http://localhost:37777/api/timeline/context?anchor=1234&depth_before=10&depth_after=10"
+curl -s "http://localhost:38888/api/timeline/context?anchor=1234&depth_before=10&depth_after=10"
 
 # Using session ID as anchor
-curl -s "http://localhost:37777/api/timeline/context?anchor=S545&depth_before=10&depth_after=10"
+curl -s "http://localhost:38888/api/timeline/context?anchor=S545&depth_before=10&depth_after=10"
 
 # Using ISO timestamp as anchor
-curl -s "http://localhost:37777/api/timeline/context?anchor=2024-11-09T12:00:00Z&depth_before=10&depth_after=10"
+curl -s "http://localhost:38888/api/timeline/context?anchor=2024-11-09T12:00:00Z&depth_before=10&depth_after=10"
 ```
 
 ## Parameters

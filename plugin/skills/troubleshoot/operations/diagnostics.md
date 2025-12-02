@@ -37,7 +37,7 @@ Test if the worker service responds to HTTP requests:
 
 ```bash
 # Default port is 37777
-curl -s http://127.0.0.1:37777/health
+curl -s http://127.0.0.1:38888/health
 
 # Check custom port from settings
 PORT=$(cat ~/.rad-mem/settings.json 2>/dev/null | grep CLAUDE_MEM_WORKER_PORT | grep -o '[0-9]\+' || echo "37777")
@@ -50,7 +50,7 @@ curl -s http://127.0.0.1:$PORT/health
 - Worker not running → Go back to step 1
 - Port conflict → Check what's using the port:
   ```bash
-  lsof -i :37777 || netstat -tlnp | grep 37777
+  lsof -i :38888 || netstat -tlnp | grep 37777
   ```
 
 ### 3. Check Database
@@ -132,10 +132,10 @@ Check if the web viewer is accessible:
 
 ```bash
 # Test viewer endpoint
-curl -s http://127.0.0.1:37777/ | head -20
+curl -s http://127.0.0.1:38888/ | head -20
 
 # Test stats endpoint
-curl -s http://127.0.0.1:37777/api/stats
+curl -s http://127.0.0.1:38888/api/stats
 ```
 
 **Expected:**
@@ -152,7 +152,7 @@ cat ~/.rad-mem/settings.json 2>/dev/null
 cat ~/.claude/settings.json 2>/dev/null
 
 # Check what's listening on default port
-lsof -i :37777 2>&1 || netstat -tlnp 2>&1 | grep 37777
+lsof -i :38888 2>&1 || netstat -tlnp 2>&1 | grep 37777
 
 # Test connectivity
 nc -zv 127.0.0.1 37777 2>&1
@@ -184,7 +184,7 @@ PM2_PATH=$(which pm2 2>/dev/null || echo "~/.claude/plugins/marketplaces/thedotm
 echo "   PM2 path: $PM2_PATH"
 WORKER_STATUS=$($PM2_PATH jlist 2>/dev/null | grep -o '"name":"rad-mem-worker".*"status":"[^"]*"' | grep -o 'status":"[^"]*"' | cut -d'"' -f3 || echo 'not running')
 echo "   Worker status: $WORKER_STATUS"
-echo "   Health check: $(curl -s http://127.0.0.1:37777/health 2>/dev/null || echo 'FAILED')"
+echo "   Health check: $(curl -s http://127.0.0.1:38888/health 2>/dev/null || echo 'FAILED')"
 echo ""
 echo "5. Configuration"
 echo "   Port setting: $(cat ~/.rad-mem/settings.json 2>/dev/null | grep CLAUDE_MEM_WORKER_PORT || echo 'default (37777)')"

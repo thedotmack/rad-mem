@@ -70,7 +70,7 @@ Restart Claude Code. Context from previous sessions will automatically appear in
 - 🧠 **Persistent Memory** - Context survives across sessions
 - 📊 **Progressive Disclosure** - Layered memory retrieval with token cost visibility
 - 🔍 **Skill-Based Search** - Query your project history with mem-search skill (~2,250 token savings)
-- 🖥️ **Web Viewer UI** - Real-time memory stream at http://localhost:37777
+- 🖥️ **Web Viewer UI** - Real-time memory stream at http://localhost:38888
 - 🤖 **Automatic Operation** - No manual intervention required
 - 🔗 **Citations** - Reference past decisions with `rad-mem://` URIs
 - 🧪 **Beta Channel** - Try experimental features like Endless Mode via version switching
@@ -197,7 +197,7 @@ Rad-Mem offers a **beta channel** with experimental features. Switch between sta
 
 ### How to Try Beta
 
-1. Open http://localhost:37777
+1. Open http://localhost:38888
 2. Click Settings (gear icon)
 3. In **Version Channel**, click "Try Beta (Endless Mode)"
 4. Wait for the worker to restart

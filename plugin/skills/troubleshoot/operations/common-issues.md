@@ -34,7 +34,7 @@ Quick fixes for frequently encountered rad-mem problems.
 
 5. Check if observation appears in viewer:
    ```bash
-   open http://127.0.0.1:37777
+   open http://127.0.0.1:38888
    # Or manually check database:
    sqlite3 ~/.rad-mem/rad-mem.db "SELECT * FROM observations ORDER BY created_at DESC LIMIT 1;"
    ```
@@ -42,7 +42,7 @@ Quick fixes for frequently encountered rad-mem problems.
 ## Issue: Viewer Empty After Every Claude Restart {#viewer-empty}
 
 **Symptoms:**
-- Viewer shows no data at http://127.0.0.1:37777
+- Viewer shows no data at http://127.0.0.1:38888
 - Stats endpoint returns all zeros
 - Database appears empty in UI
 
@@ -71,7 +71,7 @@ Quick fixes for frequently encountered rad-mem problems.
 
 4. Test viewer connection manually:
    ```bash
-   curl -s http://127.0.0.1:37777/api/stats
+   curl -s http://127.0.0.1:38888/api/stats
    # Should show non-zero counts if data exists
    ```
 
@@ -165,7 +165,7 @@ Quick fixes for frequently encountered rad-mem problems.
 
 3. Try search via API directly:
    ```bash
-   curl "http://127.0.0.1:37777/api/search/observations?q=test&format=index"
+   curl "http://127.0.0.1:38888/api/search/observations?q=test&format=index"
    ```
 
 4. If FTS5 out of sync, restart worker (triggers reindex):
@@ -183,7 +183,7 @@ Quick fixes for frequently encountered rad-mem problems.
 **Fix:**
 1. Check what's using port 37777:
    ```bash
-   lsof -i :37777
+   lsof -i :38888
    ```
 
 2. Either kill the conflicting process or change rad-mem port:

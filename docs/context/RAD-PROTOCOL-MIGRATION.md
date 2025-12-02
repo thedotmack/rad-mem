@@ -660,7 +660,7 @@ export const OBSERVATION_CONFIG = {
 RAD Protocol Server API v1.0
 ============================
 
-Base URL: http://localhost:37777
+Base URL: http://localhost:38888
 
 CONTEXT
 -------

@@ -70,7 +70,7 @@ execSync(`"${PM2_PATH}" start "${ECOSYSTEM_CONFIG}"`);
 **The Breakthrough**: Real-time visualization of memory stream
 
 **What We Built**:
-- React-based web UI at http://localhost:37777
+- React-based web UI at http://localhost:38888
 - Server-Sent Events (SSE) for real-time updates
 - Infinite scroll pagination
 - Project filtering
@@ -392,7 +392,7 @@ SessionEnd → Mark session complete → Worker finishes → Exit naturally
 ```typescript
 // v3: Aggressive
 async function sessionEnd(sessionId: string) {
-  await fetch(`http://localhost:37777/sessions/${sessionId}`, {
+  await fetch(`http://localhost:38888/sessions/${sessionId}`, {
     method: 'DELETE'
   });
 }
@@ -975,7 +975,7 @@ claude
 # (Should see progressive disclosure index with v5 viewer link)
 
 # Open viewer UI (v5.1.0+)
-open http://localhost:37777
+open http://localhost:38888
 
 # Submit a prompt and watch real-time updates in viewer
 ```
@@ -984,14 +984,14 @@ open http://localhost:37777
 
 ```bash
 # View memory stream in browser (v5.1.0+)
-open http://localhost:37777
+open http://localhost:38888
 
 # Toggle theme (v5.1.2+)
 # Click theme button in viewer header
 
 # Check worker health
 npm run worker:status
-curl http://localhost:37777/health
+curl http://localhost:38888/health
 ```
 
 ---

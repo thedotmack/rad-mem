@@ -17,7 +17,7 @@
 
 **Example:**
 ```bash
-curl -s "http://localhost:37777/api/search/observations?query=authentication&format=index&limit=5"
+curl -s "http://localhost:38888/api/search/observations?query=authentication&format=index&limit=5"
 ```
 
 **Response:**
@@ -61,7 +61,7 @@ curl -s "http://localhost:37777/api/search/observations?query=authentication&for
 **Example:**
 ```bash
 # After reviewing index, get full details for observation #1234
-curl -s "http://localhost:37777/api/search/observations?query=authentication&format=full&limit=1&offset=2"
+curl -s "http://localhost:38888/api/search/observations?query=authentication&format=full&limit=1&offset=2"
 ```
 
 **Why:** Targeted token expenditure with high ROI. 10x cost difference means selectivity matters.

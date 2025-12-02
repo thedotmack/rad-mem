@@ -7,7 +7,7 @@ Common mistakes to avoid when using the HTTP search API. These anti-patterns add
 **The Mistake:**
 ```bash
 # ❌ Bad: Jump straight to full format
-curl -s "http://localhost:37777/api/search/observations?query=authentication&format=full&limit=20"
+curl -s "http://localhost:38888/api/search/observations?query=authentication&format=full&limit=20"
 ```
 
 **Why It's Wrong:**
@@ -18,9 +18,9 @@ curl -s "http://localhost:37777/api/search/observations?query=authentication&for
 **The Correction:**
 ```bash
 # ✅ Good: Start with index, review, then request full selectively
-curl -s "http://localhost:37777/api/search/observations?query=authentication&format=index&limit=5"
+curl -s "http://localhost:38888/api/search/observations?query=authentication&format=index&limit=5"
 # Review results, identify relevant items
-curl -s "http://localhost:37777/api/search/observations?query=authentication&format=full&limit=1&offset=2"
+curl -s "http://localhost:38888/api/search/observations?query=authentication&format=full&limit=1&offset=2"
 ```
 
 **What It Teaches:**
@@ -36,7 +36,7 @@ LLMs trained on code examples may have seen `format=full` as "more complete" and
 **The Mistake:**
 ```bash
 # ❌ Bad: Request limit=20 without reviewing index first
-curl -s "http://localhost:37777/api/search/observations?query=auth&format=index&limit=20"
+curl -s "http://localhost:38888/api/search/observations?query=auth&format=index&limit=20"
 ```
 
 **Why It's Wrong:**
@@ -47,9 +47,9 @@ curl -s "http://localhost:37777/api/search/observations?query=auth&format=index&
 **The Correction:**
 ```bash
 # ✅ Good: Start small, paginate if needed
-curl -s "http://localhost:37777/api/search/observations?query=auth&format=index&limit=5"
+curl -s "http://localhost:38888/api/search/observations?query=auth&format=index&limit=5"
 # If needed, paginate:
-curl -s "http://localhost:37777/api/search/observations?query=auth&format=index&limit=5&offset=5"
+curl -s "http://localhost:38888/api/search/observations?query=auth&format=index&limit=5&offset=5"
 ```
 
 **What It Teaches:**
@@ -65,7 +65,7 @@ LLMs may think "more results = more thorough" without considering relevance.
 **The Mistake:**
 ```bash
 # ❌ Bad: Use generic search for everything
-curl -s "http://localhost:37777/api/search/observations?query=bugfix&format=index&limit=10"
+curl -s "http://localhost:38888/api/search/observations?query=bugfix&format=index&limit=10"
 ```
 
 **Why It's Wrong:**
@@ -76,7 +76,7 @@ curl -s "http://localhost:37777/api/search/observations?query=bugfix&format=inde
 **The Correction:**
 ```bash
 # ✅ Good: Use specialized endpoint when applicable
-curl -s "http://localhost:37777/api/search/by-type?type=bugfix&format=index&limit=10"
+curl -s "http://localhost:38888/api/search/by-type?type=bugfix&format=index&limit=10"
 ```
 
 **What It Teaches:**
@@ -92,7 +92,7 @@ LLMs may gravitate toward "general purpose" tools to avoid decision-making.
 **The Mistake:**
 ```bash
 # ❌ Bad: Request full format before understanding what's relevant
-curl -s "http://localhost:37777/api/search/observations?query=database&format=full&limit=10"
+curl -s "http://localhost:38888/api/search/observations?query=database&format=full&limit=10"
 ```
 
 **Why It's Wrong:**
@@ -103,10 +103,10 @@ curl -s "http://localhost:37777/api/search/observations?query=database&format=fu
 **The Correction:**
 ```bash
 # ✅ Good: Index first to identify relevance
-curl -s "http://localhost:37777/api/search/observations?query=database&format=index&limit=10"
+curl -s "http://localhost:38888/api/search/observations?query=database&format=index&limit=10"
 # Identify relevant: #1234 and #1250
-curl -s "http://localhost:37777/api/search/observations?query=database+1234&format=full&limit=1"
-curl -s "http://localhost:37777/api/search/observations?query=database+1250&format=full&limit=1"
+curl -s "http://localhost:38888/api/search/observations?query=database+1234&format=full&limit=1"
+curl -s "http://localhost:38888/api/search/observations?query=database+1250&format=full&limit=1"
 ```
 
 **What It Teaches:**
@@ -122,9 +122,9 @@ LLMs may try to "get everything at once" to avoid multiple tool calls.
 **The Mistake:**
 ```bash
 # ❌ Bad: Search for individual observations separately
-curl -s "http://localhost:37777/api/search/observations?query=before+deployment"
-curl -s "http://localhost:37777/api/search/observations?query=during+deployment"
-curl -s "http://localhost:37777/api/search/observations?query=after+deployment"
+curl -s "http://localhost:38888/api/search/observations?query=before+deployment"
+curl -s "http://localhost:38888/api/search/observations?query=during+deployment"
+curl -s "http://localhost:38888/api/search/observations?query=after+deployment"
 ```
 
 **Why It's Wrong:**
@@ -135,7 +135,7 @@ curl -s "http://localhost:37777/api/search/observations?query=after+deployment"
 **The Correction:**
 ```bash
 # ✅ Good: Use timeline tool for contextual investigation
-curl -s "http://localhost:37777/api/timeline/by-query?query=deployment&depth_before=10&depth_after=10"
+curl -s "http://localhost:38888/api/timeline/by-query?query=deployment&depth_before=10&depth_after=10"
 ```
 
 **What It Teaches:**

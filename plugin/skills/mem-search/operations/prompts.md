@@ -12,7 +12,7 @@ Search raw user prompts to find what was actually asked across all sessions.
 ## Command
 
 ```bash
-curl -s "http://localhost:37777/api/search/prompts?query=authentication&format=index&limit=5"
+curl -s "http://localhost:38888/api/search/prompts?query=authentication&format=index&limit=5"
 ```
 
 ## Parameters

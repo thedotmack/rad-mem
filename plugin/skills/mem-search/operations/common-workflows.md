@@ -10,7 +10,7 @@ Step-by-step guides for typical user requests using the search API.
 
 1. **Get recent context** (fastest path):
 ```bash
-curl -s "http://localhost:37777/api/context/recent?limit=3"
+curl -s "http://localhost:38888/api/context/recent?limit=3"
 ```
 
 2. **Present as narrative:**
@@ -42,14 +42,14 @@ Implemented JWT authentication system
 
 1. **Search by type** (index format first):
 ```bash
-curl -s "http://localhost:37777/api/search/by-type?type=bugfix&format=index&limit=5"
+curl -s "http://localhost:38888/api/search/by-type?type=bugfix&format=index&limit=5"
 ```
 
 2. **Review index results**, identify relevant items
 
 3. **Get full details** for specific bugs:
 ```bash
-curl -s "http://localhost:37777/api/search/by-type?type=bugfix&format=full&limit=1&offset=2"
+curl -s "http://localhost:38888/api/search/by-type?type=bugfix&format=full&limit=1&offset=2"
 ```
 
 4. **Present findings:**
@@ -78,14 +78,14 @@ Found 5 bug fixes:
 
 1. **Search by file** (index format):
 ```bash
-curl -s "http://localhost:37777/api/search/by-file?filePath=auth/login.ts&format=index&limit=10"
+curl -s "http://localhost:38888/api/search/by-file?filePath=auth/login.ts&format=index&limit=10"
 ```
 
 2. **Review chronological changes**
 
 3. **Get full details** for specific changes:
 ```bash
-curl -s "http://localhost:37777/api/search/by-file?filePath=auth/login.ts&format=full&limit=1&offset=3"
+curl -s "http://localhost:38888/api/search/by-file?filePath=auth/login.ts&format=full&limit=1&offset=3"
 ```
 
 4. **Present as file timeline:**
@@ -112,14 +112,14 @@ curl -s "http://localhost:37777/api/search/by-file?filePath=auth/login.ts&format
 
 1. **Find the event** using search:
 ```bash
-curl -s "http://localhost:37777/api/search/observations?query=deployment&format=index&limit=5"
+curl -s "http://localhost:38888/api/search/observations?query=deployment&format=index&limit=5"
 ```
 
 2. **Note observation ID** (e.g., #1234)
 
 3. **Get timeline context**:
 ```bash
-curl -s "http://localhost:37777/api/timeline/context?anchor=1234&depth_before=10&depth_after=10"
+curl -s "http://localhost:38888/api/timeline/context?anchor=1234&depth_before=10&depth_after=10"
 ```
 
 4. **Present as chronological narrative:**
@@ -152,7 +152,7 @@ curl -s "http://localhost:37777/api/timeline/context?anchor=1234&depth_before=10
 
 1. **Use timeline-by-query** (auto mode):
 ```bash
-curl -s "http://localhost:37777/api/timeline/by-query?query=authentication&mode=auto&depth_before=10&depth_after=10"
+curl -s "http://localhost:38888/api/timeline/by-query?query=authentication&mode=auto&depth_before=10&depth_after=10"
 ```
 
 2. **Present timeline directly:**
@@ -172,7 +172,7 @@ curl -s "http://localhost:37777/api/timeline/by-query?query=authentication&mode=
 
 **Alternative:** Use interactive mode for broad queries:
 ```bash
-curl -s "http://localhost:37777/api/timeline/by-query?query=auth&mode=interactive&limit=5"
+curl -s "http://localhost:38888/api/timeline/by-query?query=auth&mode=interactive&limit=5"
 ```
 Then choose anchor manually.
 
@@ -186,14 +186,14 @@ Then choose anchor manually.
 
 1. **Combine filters** for precision:
 ```bash
-curl -s "http://localhost:37777/api/search/observations?query=authentication&type=feature&dateRange[start]=2024-11-01&format=index&limit=10"
+curl -s "http://localhost:38888/api/search/observations?query=authentication&type=feature&dateRange[start]=2024-11-01&format=index&limit=10"
 ```
 
 2. **Review filtered results**
 
 3. **Get full details** for relevant features:
 ```bash
-curl -s "http://localhost:37777/api/search/observations?query=authentication&type=feature&format=full&limit=1&offset=2"
+curl -s "http://localhost:38888/api/search/observations?query=authentication&type=feature&format=full&limit=1&offset=2"
 ```
 
 4. **Present findings:**

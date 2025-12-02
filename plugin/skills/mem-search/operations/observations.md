@@ -12,7 +12,7 @@ Search all observations using natural language queries.
 ## Command
 
 ```bash
-curl -s "http://localhost:37777/api/search/observations?query=authentication&format=index&limit=5"
+curl -s "http://localhost:38888/api/search/observations?query=authentication&format=index&limit=5"
 ```
 
 ## Parameters
@@ -88,13 +88,13 @@ Search without query text (direct SQLite filtering):
 
 ```bash
 # Get all observations from November 2025
-curl -s "http://localhost:37777/api/search?type=observations&dateRange[start]=2025-11-01&format=index"
+curl -s "http://localhost:38888/api/search?type=observations&dateRange[start]=2025-11-01&format=index"
 
 # Get all bug fixes from a specific project
-curl -s "http://localhost:37777/api/search?type=observations&obs_type=bugfix&project=api-server&format=index"
+curl -s "http://localhost:38888/api/search?type=observations&obs_type=bugfix&project=api-server&format=index"
 
 # Get all observations from last 7 days
-curl -s "http://localhost:37777/api/search?type=observations&dateRange[start]=2025-11-11&format=index"
+curl -s "http://localhost:38888/api/search?type=observations&dateRange[start]=2025-11-11&format=index"
 ```
 
 ## Error Handling

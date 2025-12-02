@@ -35,7 +35,7 @@
 
 ## 7. Settings and UX
 - Read `.rad-mem/settings.json` overrides (worker port, observation depth) and surface VS Code settings for Copilot-specific toggles (auto-sync enabled, max observations per prompt).
-- Add status bar indicator/commands for worker health, quick restart instructions, and opening the viewer UI (`http://localhost:37777`).
+- Add status bar indicator/commands for worker health, quick restart instructions, and opening the viewer UI (`http://localhost:38888`).
 - Provide inline notifications when the worker is unreachable, including guidance to restart via PM2.
 
 ## 8. Testing and QA

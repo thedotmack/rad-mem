@@ -12,7 +12,7 @@ Find observations by type: bugfix, feature, refactor, decision, discovery, or ch
 ## Command
 
 ```bash
-curl -s "http://localhost:37777/api/search/by-type?type=bugfix&format=index&limit=5"
+curl -s "http://localhost:38888/api/search/by-type?type=bugfix&format=index&limit=5"
 ```
 
 ## Parameters
@@ -93,7 +93,7 @@ For complete formatting guidelines, see [formatting.md](formatting.md).
 To search for multiple types:
 
 ```bash
-curl -s "http://localhost:37777/api/search/by-type?type=bugfix,feature&format=index&limit=10"
+curl -s "http://localhost:38888/api/search/by-type?type=bugfix,feature&format=index&limit=10"
 ```
 
 ## Error Handling

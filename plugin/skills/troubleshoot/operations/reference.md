@@ -36,13 +36,13 @@ pm2 flush rad-mem-worker
 
 ```bash
 # Check worker health (default port)
-curl -s http://127.0.0.1:37777/health
+curl -s http://127.0.0.1:38888/health
 
 # Check viewer stats
-curl -s http://127.0.0.1:37777/api/stats
+curl -s http://127.0.0.1:38888/api/stats
 
 # Open viewer in browser
-open http://127.0.0.1:37777
+open http://127.0.0.1:38888
 
 # Test custom port
 PORT=37778
@@ -120,12 +120,12 @@ cat package.json
 
 ```bash
 # Check what's using port 37777
-lsof -i :37777
+lsof -i :38888
 netstat -tlnp | grep 37777
 
 # Test port connectivity
 nc -zv 127.0.0.1 37777
-curl -v http://127.0.0.1:37777/health
+curl -v http://127.0.0.1:38888/health
 ```
 
 ## Log Analysis

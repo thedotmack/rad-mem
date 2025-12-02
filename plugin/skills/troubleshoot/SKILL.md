@@ -58,7 +58,7 @@ pm2 delete rad-mem-worker 2>/dev/null; \
 npm install && \
 node_modules/.bin/pm2 start ecosystem.config.cjs && \
 sleep 3 && \
-curl -s http://127.0.0.1:37777/health
+curl -s http://127.0.0.1:38888/health
 ```
 
 Expected output: `{"status":"ok"}`

@@ -12,7 +12,7 @@ Find all work related to a specific file path.
 ## Command
 
 ```bash
-curl -s "http://localhost:37777/api/search/by-file?filePath=src/services/worker-service.ts&format=index&limit=10"
+curl -s "http://localhost:38888/api/search/by-file?filePath=src/services/worker-service.ts&format=index&limit=10"
 ```
 
 ## Parameters
@@ -86,9 +86,9 @@ The file path parameter supports partial matching:
 
 ```bash
 # These all match "src/services/worker-service.ts"
-curl -s "http://localhost:37777/api/search/by-file?filePath=worker-service.ts&format=index"
-curl -s "http://localhost:37777/api/search/by-file?filePath=services/worker&format=index"
-curl -s "http://localhost:37777/api/search/by-file?filePath=worker-service&format=index"
+curl -s "http://localhost:38888/api/search/by-file?filePath=worker-service.ts&format=index"
+curl -s "http://localhost:38888/api/search/by-file?filePath=services/worker&format=index"
+curl -s "http://localhost:38888/api/search/by-file?filePath=worker-service&format=index"
 ```
 
 ## Directory Searches
@@ -96,7 +96,7 @@ curl -s "http://localhost:37777/api/search/by-file?filePath=worker-service&forma
 Search for all work in a directory:
 
 ```bash
-curl -s "http://localhost:37777/api/search/by-file?filePath=src/hooks/&format=index&limit=20"
+curl -s "http://localhost:38888/api/search/by-file?filePath=src/hooks/&format=index&limit=20"
 ```
 
 ## Error Handling

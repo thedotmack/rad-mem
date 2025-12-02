@@ -55,6 +55,10 @@ export class WorkerService {
   private paginationHelper: PaginationHelper;
   private settingsManager: SettingsManager;
 
+  // Queue monitoring for auto-stop spinner
+  private lastQueueNonZeroTime: number = Date.now();
+  private queueMonitorInterval: NodeJS.Timeout | null = null;
+
   constructor() {
     this.app = express();
 
@@ -78,6 +82,7 @@ export class WorkerService {
 
     this.setupMiddleware();
     this.setupRoutes();
+    this.startQueueMonitor();
   }
 
   /**
@@ -284,6 +289,12 @@ export class WorkerService {
    * Shutdown the worker service
    */
   async shutdown(): Promise<void> {
+    // Stop queue monitor
+    if (this.queueMonitorInterval) {
+      clearInterval(this.queueMonitorInterval);
+      this.queueMonitorInterval = null;
+    }
+
     // Shutdown all active sessions
     await this.sessionManager.shutdownAll();
 
@@ -1316,6 +1327,39 @@ export class WorkerService {
   // ============================================================================
 
   /**
+   * Start monitoring queue to auto-stop spinner after sustained idle
+   * Broadcasts final status when queue has been empty for 3+ seconds
+   */
+  private startQueueMonitor(): void {
+    this.queueMonitorInterval = setInterval(() => {
+      const queueDepth = this.sessionManager.getTotalActiveWork();
+      const now = Date.now();
+
+      if (queueDepth > 0) {
+        // Queue has work - update timestamp
+        this.lastQueueNonZeroTime = now;
+      } else {
+        // Queue is empty - check if it's been empty for 3+ seconds
+        const emptyDuration = now - this.lastQueueNonZeroTime;
+        if (emptyDuration >= 3000) {
+          // Queue has been empty for 3+ seconds - broadcast final status
+          const isProcessing = this.sessionManager.isAnySessionProcessing();
+          if (isProcessing) {
+            // Still shows as processing but queue empty - force update
+            this.sseBroadcaster.broadcast({
+              type: 'processing_status',
+              isProcessing: false,
+              queueDepth: 0
+            });
+            // Reset timer to avoid repeated broadcasts
+            this.lastQueueNonZeroTime = now;
+          }
+        }
+      }
+    }, 500); // Check every 500ms
+  }
+
+  /**
    * Broadcast processing status change to SSE clients
    * Checks both queue depth and active generators to prevent premature spinner stop
    */
@@ -1323,6 +1367,11 @@ export class WorkerService {
     const isProcessing = this.sessionManager.isAnySessionProcessing();
     const queueDepth = this.sessionManager.getTotalActiveWork(); // Includes queued + actively processing
     const activeSessions = this.sessionManager.getActiveSessionCount();
+
+    // Update last non-zero time if queue has work
+    if (queueDepth > 0) {
+      this.lastQueueNonZeroTime = Date.now();
+    }
 
     logger.info('WORKER', 'Broadcasting processing status', {
       isProcessing,
@@ -1882,10 +1931,10 @@ export class WorkerService {
         }
       ],
       examples: [
-        'curl "http://localhost:37777/api/search/observations?query=authentication&format=index&limit=5"',
-        'curl "http://localhost:37777/api/search/by-type?type=bugfix&limit=10"',
-        'curl "http://localhost:37777/api/context/recent?project=rad-mem&limit=3"',
-        'curl "http://localhost:37777/api/context/timeline?anchor=123&depth_before=5&depth_after=5"'
+        'curl "http://localhost:38888/api/search/observations?query=authentication&format=index&limit=5"',
+        'curl "http://localhost:38888/api/search/by-type?type=bugfix&limit=10"',
+        'curl "http://localhost:38888/api/context/recent?project=rad-mem&limit=3"',
+        'curl "http://localhost:38888/api/context/timeline?anchor=123&depth_before=5&depth_after=5"'
       ]
     });
   }

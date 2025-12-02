@@ -25,7 +25,7 @@ Use when users ask about PREVIOUS sessions (not current conversation):
 ### Step 1: Search Everything
 
 ```bash
-curl "http://localhost:37777/api/search?query=authentication&format=index&limit=5"
+curl "http://localhost:38888/api/search?query=authentication&format=index&limit=5"
 ```
 
 **Required parameters:**
@@ -54,13 +54,13 @@ For each relevant ID, fetch full details:
 
 ```bash
 # Fetch observation
-curl "http://localhost:37777/api/observation/11131"
+curl "http://localhost:38888/api/observation/11131"
 
 # Fetch session
-curl "http://localhost:37777/api/session/2005"
+curl "http://localhost:38888/api/session/2005"
 
 # Fetch prompt
-curl "http://localhost:37777/api/prompt/5421"
+curl "http://localhost:38888/api/prompt/5421"
 ```
 
 **ID formats:**
@@ -86,17 +86,17 @@ curl "http://localhost:37777/api/prompt/5421"
 
 **Find recent bug fixes:**
 ```bash
-curl "http://localhost:37777/api/search?query=bug&type=observations&obs_type=bugfix&format=index&limit=5"
+curl "http://localhost:38888/api/search?query=bug&type=observations&obs_type=bugfix&format=index&limit=5"
 ```
 
 **Find what happened last week:**
 ```bash
-curl "http://localhost:37777/api/search?query=&type=observations&dateRange[start]=2025-11-11&format=index&limit=10"
+curl "http://localhost:38888/api/search?query=&type=observations&dateRange[start]=2025-11-11&format=index&limit=10"
 ```
 
 **Search everything:**
 ```bash
-curl "http://localhost:37777/api/search?query=database+migration&format=index&limit=5"
+curl "http://localhost:38888/api/search?query=database+migration&format=index&limit=5"
 ```
 
 ## Why This Workflow?

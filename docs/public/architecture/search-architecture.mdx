@@ -45,7 +45,7 @@ Claude recognizes the intent and invokes the mem-search skill:
 The skill uses `curl` to call the HTTP API:
 
 ```bash
-curl "http://localhost:37777/api/search/observations?query=bugs&type=bugfix&limit=5"
+curl "http://localhost:38888/api/search/observations?query=bugs&type=bugfix&limit=5"
 ```
 
 ### 4. FTS5 Search
@@ -157,7 +157,7 @@ GET /api/search/prompts
 
 **Example**:
 ```bash
-curl "http://localhost:37777/api/search/observations?query=authentication&type=decision&limit=5"
+curl "http://localhost:38888/api/search/observations?query=authentication&type=decision&limit=5"
 ```
 
 ### Filtered Search
@@ -176,7 +176,7 @@ GET /api/search/by-file
 
 **Example**:
 ```bash
-curl "http://localhost:37777/api/search/by-file?filePath=worker-service.ts&limit=10"
+curl "http://localhost:38888/api/search/by-file?filePath=worker-service.ts&limit=10"
 ```
 
 ### Context Retrieval
@@ -196,7 +196,7 @@ GET /api/timeline/by-query
 
 **Example**:
 ```bash
-curl "http://localhost:37777/api/context/recent?project=rad-mem&limit=5"
+curl "http://localhost:38888/api/context/recent?project=rad-mem&limit=5"
 ```
 
 ### Documentation
@@ -426,10 +426,10 @@ Test endpoints directly:
 
 ```bash
 # Health check
-curl http://localhost:37777/health
+curl http://localhost:38888/health
 
 # Search test
-curl "http://localhost:37777/api/search/observations?query=test&limit=1"
+curl "http://localhost:38888/api/search/observations?query=test&limit=1"
 ```
 
 ### Skill Not Invoking

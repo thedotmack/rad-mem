@@ -14,10 +14,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Usage
 ```bash
 # Search within decisions (new)
-curl "http://localhost:37777/api/decisions?query=architecture&format=full&limit=5"
+curl "http://localhost:38888/api/decisions?query=architecture&format=full&limit=5"
 
 # All decisions (existing behavior preserved)
-curl "http://localhost:37777/api/decisions?format=index&limit=10"
+curl "http://localhost:38888/api/decisions?format=index&limit=10"
 ```
 
 ## [6.3.1] - 2025-11-25
@@ -1034,7 +1034,7 @@ To activate:
 - Version bumped from 5.1.1 → 5.1.2
 
 **Usage**:
-Access the viewer at http://localhost:37777 and use the theme toggle to switch between light mode, dark mode, or system preference.
+Access the viewer at http://localhost:38888 and use the theme toggle to switch between light mode, dark mode, or system preference.
 
 ## [5.1.1] - 2025-11-06
 
@@ -1060,7 +1060,7 @@ Users on Windows will now have a smoother installation experience with automatic
 
 This release introduces a production-ready web interface for visualizing your memory stream in real-time!
 
-**Access the viewer**: http://localhost:37777 (auto-starts with the worker)
+**Access the viewer**: http://localhost:38888 (auto-starts with the worker)
 
 ### ✨ Key Features
 
@@ -1135,7 +1135,7 @@ Updated CLAUDE.md with:
 
 1. Update rad-mem to v5.1.0
 2. Start a Claude Code session (worker auto-starts)
-3. Open http://localhost:37777 in your browser
+3. Open http://localhost:38888 in your browser
 4. Watch your memory stream in real-time!
 
 ### 📦 Files Changed

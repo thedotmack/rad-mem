@@ -12,7 +12,7 @@ Find observations tagged with specific concepts.
 ## Command
 
 ```bash
-curl -s "http://localhost:37777/api/search/by-concept?concept=discovery&format=index&limit=5"
+curl -s "http://localhost:38888/api/search/by-concept?concept=discovery&format=index&limit=5"
 ```
 
 ## Parameters

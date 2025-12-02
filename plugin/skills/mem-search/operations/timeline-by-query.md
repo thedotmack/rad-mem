@@ -13,10 +13,10 @@ Search for observations and get timeline context in a single request. Combines s
 
 ```bash
 # Auto mode: Uses top search result as timeline anchor
-curl -s "http://localhost:37777/api/timeline/by-query?query=authentication&mode=auto&depth_before=10&depth_after=10"
+curl -s "http://localhost:38888/api/timeline/by-query?query=authentication&mode=auto&depth_before=10&depth_after=10"
 
 # Interactive mode: Shows top N search results for manual selection
-curl -s "http://localhost:37777/api/timeline/by-query?query=authentication&mode=interactive&limit=5"
+curl -s "http://localhost:38888/api/timeline/by-query?query=authentication&mode=interactive&limit=5"
 ```
 
 ## Parameters
@@ -35,7 +35,7 @@ curl -s "http://localhost:37777/api/timeline/by-query?query=authentication&mode=
 Automatically gets timeline around best match:
 
 ```bash
-curl -s "http://localhost:37777/api/timeline/by-query?query=JWT+authentication&mode=auto&depth_before=10&depth_after=10"
+curl -s "http://localhost:38888/api/timeline/by-query?query=JWT+authentication&mode=auto&depth_before=10&depth_after=10"
 ```
 
 **Response:**
@@ -65,7 +65,7 @@ curl -s "http://localhost:37777/api/timeline/by-query?query=JWT+authentication&m
 Shows top search results for manual review:
 
 ```bash
-curl -s "http://localhost:37777/api/timeline/by-query?query=authentication&mode=interactive&limit=5"
+curl -s "http://localhost:38888/api/timeline/by-query?query=authentication&mode=interactive&limit=5"
 ```
 
 **Response:**

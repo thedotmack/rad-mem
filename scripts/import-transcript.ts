@@ -3,7 +3,16 @@
  * Import Claude Code transcript to rad-mem
  * Replays tool executions through RAD Protocol API
  *
- * Usage: npx tsx scripts/import-transcript.ts <path-to-transcript.jsonl>
+ * Usage: npx tsx scripts/import-transcript.ts <path-to-transcript.jsonl> [delayMs]
+ *
+ * Options:
+ *   delayMs: Milliseconds between observation submissions (default: 100)
+ *            Can also be set via IMPORT_DELAY_MS environment variable
+ *
+ * Environment Variables:
+ *   IMPORT_PROCESSING_WAIT_MS: Milliseconds to wait per observation for processing
+ *                              before generating summary (default: 2000)
+ *                              Total wait = queued observations × this value
  */
 
 import { existsSync, readFileSync } from 'fs';
@@ -304,8 +313,9 @@ async function completeSession(sessionId: string): Promise<void> {
 /**
  * Main import flow
  */
-async function importTranscript(transcriptPath: string): Promise<void> {
+async function importTranscript(transcriptPath: string, delayMs: number = 100): Promise<void> {
   console.log(`Parsing transcript: ${transcriptPath}`);
+  console.log(`Delay between submissions: ${delayMs}ms`);
 
   const { entries, sessionId, project, lastUserMessage, lastAssistantMessage } =
     parseTranscript(transcriptPath);
@@ -346,30 +356,36 @@ async function importTranscript(transcriptPath: string): Promise<void> {
       `\rProcessed: ${queued + skipped}/${executions.length} (${queued} queued, ${skipped} skipped)`
     );
 
-    // Pause 100ms between submissions to let SDK agent process
-    await new Promise(resolve => setTimeout(resolve, 100));
+    // Delay between submissions to let SDK agent process
+    if (delayMs > 0) {
+      await new Promise(resolve => setTimeout(resolve, delayMs));
+    }
   }
 
   console.log('\n');
-
-  // Generate summary
-  console.log('Generating session summary...');
-  await generateSummary(sessionId, lastUserMessage, lastAssistantMessage);
-
-  // Complete session
-  await completeSession(sessionId);
-
   console.log('Import complete!');
   console.log(`  Observations queued: ${queued}`);
   console.log(`  Observations skipped: ${skipped}`);
+  console.log('\nNote: Observations are processing in the background.');
+  console.log('      Session will remain active. Check rad-mem logs or viewer UI.');
 }
 
 // --- CLI Entry Point ---
 
 const transcriptPath = process.argv[2];
+const delayArg = process.argv[3];
 
 if (!transcriptPath) {
-  console.error('Usage: npx tsx scripts/import-transcript.ts <path-to-transcript.jsonl>');
+  console.error('Usage: npx tsx scripts/import-transcript.ts <path-to-transcript.jsonl> [delayMs]');
+  console.error('');
+  console.error('Options:');
+  console.error('  delayMs: Milliseconds between submissions (default: 100, env: IMPORT_DELAY_MS)');
+  console.error('');
+  console.error('Examples:');
+  console.error('  npx tsx scripts/import-transcript.ts transcript.jsonl');
+  console.error('  npx tsx scripts/import-transcript.ts transcript.jsonl 500');
+  console.error('  npx tsx scripts/import-transcript.ts transcript.jsonl 0  # no delay');
+  console.error('  IMPORT_DELAY_MS=200 npx tsx scripts/import-transcript.ts transcript.jsonl');
   process.exit(1);
 }
 
@@ -380,7 +396,19 @@ if (!existsSync(resolvedPath)) {
   process.exit(1);
 }
 
-importTranscript(resolvedPath).catch((error) => {
+// Parse delay: CLI arg > env var > default (100)
+const delayMs = delayArg
+  ? parseInt(delayArg, 10)
+  : process.env.IMPORT_DELAY_MS
+    ? parseInt(process.env.IMPORT_DELAY_MS, 10)
+    : 100;
+
+if (isNaN(delayMs) || delayMs < 0) {
+  console.error(`Invalid delay value: ${delayArg || process.env.IMPORT_DELAY_MS}`);
+  process.exit(1);
+}
+
+importTranscript(resolvedPath, delayMs).catch((error) => {
   console.error('Import failed:', error.message);
   process.exit(1);
 });
