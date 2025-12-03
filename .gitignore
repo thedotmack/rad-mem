@@ -12,6 +12,6 @@ plugin/data.backup/
 dist/
 package-lock.json
 private/
-
+datasets/epstein/transcripts/
 # Generated UI files (built from viewer-template.html)
 src/ui/viewer.html
