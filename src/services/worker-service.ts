@@ -679,7 +679,7 @@ export class WorkerService {
    */
   private handleSessionEnsure(req: Request, res: Response): void {
     try {
-      const { agent_session_id, platform, project, user_prompt } = req.body;
+      const { agent_session_id, platform, project, user_prompt, domain } = req.body;
 
       // Validate required fields
       if (!agent_session_id) {
@@ -700,7 +700,8 @@ export class WorkerService {
         agent_session_id,
         platform,
         project,
-        user_prompt
+        user_prompt,
+        domain
       );
 
       logger.info('RAD', 'Session ensured', {

@@ -38,7 +38,7 @@ export class SessionManager {
     // Check if already active
     let session = this.sessions.get(sessionDbId);
     if (session) {
-      // Refresh project from database in case it was updated by new-hook
+      // Refresh project and domain from database in case they were updated by new-hook
       // This fixes the bug where sessions created with empty project get updated
       // in the database but the in-memory session still has the stale empty value
       const dbSession = this.dbManager.getSessionById(sessionDbId);
@@ -49,6 +49,14 @@ export class SessionManager {
           newProject: dbSession.project
         });
         session.project = dbSession.project;
+      }
+      if (dbSession.domain && dbSession.domain !== session.domain) {
+        silentDebug('[SessionManager] Updating domain from database', {
+          sessionDbId,
+          oldDomain: session.domain,
+          newDomain: dbSession.domain
+        });
+        session.domain = dbSession.domain;
       }
 
       // Update userPrompt for continuation prompts
@@ -98,6 +106,7 @@ export class SessionManager {
       sdkSessionId: null,
       project: dbSession.project,
       userPrompt,
+      domain: dbSession.domain || 'coding',
       pendingMessages: [],
       abortController: new AbortController(),
       generatorPromise: null,

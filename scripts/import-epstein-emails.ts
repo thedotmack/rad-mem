@@ -29,6 +29,7 @@ async function ensureSession(sessionId: string, project: string): Promise<void> 
       agent_session_id: sessionId,
       platform: 'epstein-dataset',
       project,
+      domain: 'emails',
     }),
   });
 

@@ -14,6 +14,7 @@ export interface ActiveSession {
   sdkSessionId: string | null;
   project: string;
   userPrompt: string;
+  domain: string; // 'coding' | 'emails' | 'books'
   pendingMessages: PendingMessage[];
   abortController: AbortController;
   generatorPromise: Promise<void> | null;

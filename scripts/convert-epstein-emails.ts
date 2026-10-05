@@ -259,59 +259,121 @@ function extractHeaders(text: string): Partial<ParsedEmail> {
 }
 
 // ============================================================================
+// Utility Functions: Email Splitting
+// ============================================================================
+
+/**
+ * Split text content into multiple emails if multiple "From:" headers exist
+ * Returns array of text chunks, one per email
+ */
+function splitMultipleEmails(content: string): string[] {
+  const lines = content.split('\n');
+  const emails: string[] = [];
+  const fromPattern = /^From:\s*(.+)/i;
+
+  let currentEmail: string[] = [];
+  let foundFirstFrom = false;
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+
+    // Check if this is a "From:" header
+    if (fromPattern.test(line.trim())) {
+      // If we've already found a From header, this is a new email
+      if (foundFirstFrom && currentEmail.length > 0) {
+        emails.push(currentEmail.join('\n'));
+        currentEmail = [];
+      }
+      foundFirstFrom = true;
+    }
+
+    currentEmail.push(line);
+  }
+
+  // Add the last email
+  if (currentEmail.length > 0) {
+    emails.push(currentEmail.join('\n'));
+  }
+
+  // If no "From:" headers found, return entire content as single email
+  if (emails.length === 0) {
+    return [content];
+  }
+
+  return emails;
+}
+
+// ============================================================================
 // Utility Functions: Email Parsing
 // ============================================================================
 
 /**
- * Parse a single email file
+ * Parse a single email file (may contain multiple emails)
+ * Returns array of ParsedEmail objects
  */
-function parseEmail(filepath: string): ParsedEmail | null {
+function parseEmail(filepath: string): ParsedEmail[] {
   try {
     const content = fs.readFileSync(filepath, 'utf-8');
     const filename = path.basename(filepath);
 
-    // Extract document ID from filename
+    // Extract base document ID from filename
     const docIdMatch = filename.match(/HOUSE_OVERSIGHT_(\d+)/);
-    const documentId = docIdMatch ? `HOUSE_OVERSIGHT_${docIdMatch[1]}` : filename.replace('.txt', '');
+    const baseDocId = docIdMatch ? `HOUSE_OVERSIGHT_${docIdMatch[1]}` : filename.replace('.txt', '');
 
-    // Extract headers
-    const extracted = extractHeaders(content);
+    // Split into multiple emails if needed
+    const emailTexts = splitMultipleEmails(content);
 
     // Get file modification date as fallback
     const stats = fs.statSync(filepath);
     const fallbackDate = stats.mtime;
 
-    const email: ParsedEmail = {
-      documentId,
-      filename,
-      filepath,
-      from: extracted.from,
-      to: extracted.to,
-      sent: extracted.sent || fallbackDate,
-      subject: extracted.subject,
-      body: extracted.body || content,
-      parseSuccess: extracted.parseSuccess || false,
-      tokenCount: 0, // Will be calculated later
-    };
+    const emails: ParsedEmail[] = [];
 
-    // Log recoverable errors
-    if (!extracted.sent) {
-      errors.push({
-        file: filename,
-        error: 'Failed to parse date from Sent header',
-        recovery: 'Used file modification date',
-      });
+    for (let i = 0; i < emailTexts.length; i++) {
+      const emailText = emailTexts[i];
+
+      // Create document ID with suffix for multi-email files
+      const documentId = emailTexts.length > 1 ? `${baseDocId}-email-${i + 1}` : baseDocId;
+
+      // Extract headers
+      const extracted = extractHeaders(emailText);
+
+      const email: ParsedEmail = {
+        documentId,
+        filename,
+        filepath,
+        from: extracted.from,
+        to: extracted.to,
+        sent: extracted.sent || fallbackDate,
+        subject: extracted.subject,
+        body: extracted.body || emailText,
+        parseSuccess: extracted.parseSuccess || false,
+        tokenCount: 0, // Will be calculated later
+      };
+
+      // Log recoverable errors (only for first email in file to avoid spam)
+      if (i === 0) {
+        if (!extracted.sent) {
+          errors.push({
+            file: filename,
+            error: 'Failed to parse date from Sent header',
+            recovery: 'Used file modification date',
+          });
+        }
+
+        if (!extracted.parseSuccess) {
+          errors.push({
+            file: filename,
+            error: 'No email headers found',
+            recovery: 'Treated as scanned document',
+          });
+        }
+      }
+
+      emails.push(email);
     }
 
-    if (!extracted.parseSuccess) {
-      errors.push({
-        file: filename,
-        error: 'No email headers found',
-        recovery: 'Treated as scanned document',
-      });
-    }
-
-    return email;
+    return emails;
   } catch (err) {
     const filename = path.basename(filepath);
     errors.push({
@@ -319,7 +381,7 @@ function parseEmail(filepath: string): ParsedEmail | null {
       error: `Failed to read file: ${err instanceof Error ? err.message : String(err)}`,
       recovery: 'Skipped file',
     });
-    return null;
+    return [];
   }
 }
 
@@ -687,13 +749,16 @@ async function main() {
   // Phase 2: Parse emails
   console.log('Phase 2: Parsing emails...');
   const emails: ParsedEmail[] = [];
+  let multiEmailFileCount = 0;
   for (const filepath of files) {
-    const email = parseEmail(filepath);
-    if (email) {
-      emails.push(email);
+    const parsedEmails = parseEmail(filepath);
+    if (parsedEmails.length > 1) {
+      multiEmailFileCount++;
     }
+    emails.push(...parsedEmails);
   }
-  console.log(`Parsed ${emails.length} emails (${files.length - emails.length} failed)\n`);
+  console.log(`Parsed ${emails.length} emails from ${files.length} files`);
+  console.log(`  - ${multiEmailFileCount} files contained multiple emails\n`);
 
   // Phase 3: Group by participants
   console.log('Phase 3: Grouping by participants...');

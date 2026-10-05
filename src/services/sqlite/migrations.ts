@@ -496,6 +496,27 @@ export const migration007: Migration = {
 };
 
 /**
+ * Migration 008 - Add domain column for domain-specific prompts
+ * Adds domain field to sdk_sessions to support different observation types (coding, emails, books)
+ */
+export const migration008: Migration = {
+  version: 8,
+  up: (db: Database) => {
+    // Add domain column to sdk_sessions table
+    db.run(`ALTER TABLE sdk_sessions ADD COLUMN domain TEXT DEFAULT 'coding'`);
+
+    console.log('✅ Added domain column to sdk_sessions table');
+  },
+
+  down: (db: Database) => {
+    // Note: SQLite doesn't support DROP COLUMN in all versions
+    // In production, would need to recreate table without this column
+    console.log('⚠️  Warning: SQLite ALTER TABLE DROP COLUMN not fully supported');
+    console.log('⚠️  To rollback, manually recreate the sdk_sessions table');
+  }
+};
+
+/**
  * All migrations in order
  */
 export const migrations: Migration[] = [
@@ -505,5 +526,6 @@ export const migrations: Migration[] = [
   migration004,
   migration005,
   migration006,
-  migration007
+  migration007,
+  migration008
 ];

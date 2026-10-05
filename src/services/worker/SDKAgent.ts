@@ -189,8 +189,8 @@ export class SDKAgent {
       message: {
         role: 'user',
         content: session.lastPromptNumber === 1
-          ? buildInitPrompt(session.project, session.claudeSessionId, session.userPrompt)
-          : buildContinuationPrompt(session.userPrompt, session.lastPromptNumber, session.claudeSessionId)
+          ? buildInitPrompt(session.project, session.claudeSessionId, session.userPrompt, session.domain)
+          : buildContinuationPrompt(session.userPrompt, session.lastPromptNumber, session.claudeSessionId, session.domain)
       },
       session_id: session.claudeSessionId,
       parent_tool_use_id: null,
@@ -234,7 +234,7 @@ export class SDKAgent {
               user_prompt: session.userPrompt,
               last_user_message: message.last_user_message || '',
               last_assistant_message: message.last_assistant_message || ''
-            })
+            }, session.domain)
           },
           session_id: session.claudeSessionId,
           parent_tool_use_id: null,

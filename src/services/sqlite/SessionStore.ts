@@ -1078,7 +1078,8 @@ export class SessionStore {
     agent_session_id: string,
     platform: string,
     project: string,
-    user_prompt?: string
+    user_prompt?: string,
+    domain?: string
   ): { id: number; prompt_number: number; created: boolean } {
     // Check if session already exists
     const existing = this.db.prepare(`
@@ -1089,13 +1090,25 @@ export class SessionStore {
       // Session exists - increment prompt counter
       const newPromptNumber = (existing.prompt_counter || 0) + 1;
 
-      // Update prompt counter, user_prompt (if provided), and ensure project is set
-      if (user_prompt) {
+      // Update prompt counter, user_prompt (if provided), domain (if provided), and ensure project is set
+      if (user_prompt && domain) {
+        this.db.prepare(`
+          UPDATE sdk_sessions
+          SET prompt_counter = ?, user_prompt = ?, domain = ?, project = COALESCE(NULLIF(?, ''), project)
+          WHERE id = ?
+        `).run(newPromptNumber, user_prompt, domain, project, existing.id);
+      } else if (user_prompt) {
         this.db.prepare(`
           UPDATE sdk_sessions
           SET prompt_counter = ?, user_prompt = ?, project = COALESCE(NULLIF(?, ''), project)
           WHERE id = ?
         `).run(newPromptNumber, user_prompt, project, existing.id);
+      } else if (domain) {
+        this.db.prepare(`
+          UPDATE sdk_sessions
+          SET prompt_counter = ?, domain = ?, project = COALESCE(NULLIF(?, ''), project)
+          WHERE id = ?
+        `).run(newPromptNumber, domain, project, existing.id);
       } else {
         this.db.prepare(`
           UPDATE sdk_sessions
@@ -1118,9 +1131,9 @@ export class SessionStore {
 
     const result = this.db.prepare(`
       INSERT INTO sdk_sessions
-      (claude_session_id, sdk_session_id, project, platform, user_prompt, prompt_counter, started_at, started_at_epoch, status)
-      VALUES (?, ?, ?, ?, ?, 1, ?, ?, 'active')
-    `).run(agent_session_id, agent_session_id, project, platform, user_prompt || null, now.toISOString(), nowEpoch);
+      (claude_session_id, sdk_session_id, project, platform, user_prompt, prompt_counter, domain, started_at, started_at_epoch, status)
+      VALUES (?, ?, ?, ?, ?, 1, ?, ?, ?, 'active')
+    `).run(agent_session_id, agent_session_id, project, platform, user_prompt || null, domain || 'coding', now.toISOString(), nowEpoch);
 
     const newId = result.lastInsertRowid as number;
 
